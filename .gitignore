@@ -40,3 +40,18 @@ docker-compose.override.yml
 # OS-specific
 .DS_Store
 Thumbs.db
+
+# Editor/IDE
+.vscode/
+
+# Node (optional: for pyright via npx)
+node_modules/
+
+# Ruff cache
+.ruff_cache/
+
+# Local logs directory
+logs/
+
+# Python version manager
+.python-version

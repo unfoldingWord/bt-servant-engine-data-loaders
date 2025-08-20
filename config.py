@@ -1,14 +1,19 @@
-from pydantic_settings import BaseSettings
+from __future__ import annotations
+
+from dotenv import load_dotenv
 from pydantic import Field
+from pydantic_settings import BaseSettings
+
+# Load variables from a local .env into the process environment (no error if missing).
+load_dotenv()
 
 
 class Config(BaseSettings):
-    OPENAI_API_KEY: str = Field(..., env="OPENAI_API_KEY")
-    DATA_LOADERS_LOG_LEVEL: str = Field(default="info", env="DATA_LOADERS_LOG_LEVEL")
+    """Pydantic-based settings loaded from process environment."""
 
-    class Config:
-        env_file = ".env"
+    openai_api_key: str = Field(default="", validation_alias="OPENAI_API_KEY")
+    data_loaders_log_level: str = Field(default="info", validation_alias="DATA_LOADERS_LOG_LEVEL")
 
 
-# Create a single instance to import elsewhere
+# Single shared instance to import elsewhere
 config = Config()
