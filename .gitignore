@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.env
+.venv
+venv/
+ENV/
+env/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# JetBrains / PyCharm
+.idea/
+*.iml
+out/
+
+# Virtual machine / container
+.vagrant/
+.Dockerfile.swp
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
