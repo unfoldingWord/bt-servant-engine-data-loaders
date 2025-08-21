@@ -10,9 +10,11 @@
 - Create env: `python -m venv .venv && source .venv/bin/activate`
 - Install deps: `pip install -r requirements.txt`
 - Configure env: `export OPENAI_API_KEY=...` or add to `.env`; optional: `export DATA_LOADERS_LOG_LEVEL=debug`.
-- Run loader locally: `python old_load_bsb.py`
+- Run loader locally: `python load_bsb.py` (no LLM calls) or `python old_load_bsb.py` (prototype).
 - Lint (ruff + pylint): `make lint` (auto-fix with `make fix`).
 - Type check (mypy): `make typecheck`.
+- Tests (pytest): `make test` (or `python -m pytest -q`).
+- All checks (format → lint → typecheck → tests): `make check`.
 - Example one-shot: `OPENAI_API_KEY=... python old_load_bsb.py`
 
 ## Coding Style & Naming Conventions
@@ -23,8 +25,8 @@
 - Configuration: read from `config` (do not `os.getenv` directly in modules).
 
 ## Testing Guidelines
-- Framework: pytest (not yet added). Place tests in `tests/` mirroring modules, e.g., `tests/test_logger.py`.
-- Run tests (after adding pytest): `pytest -q`.
+- Framework: pytest. Place tests in `tests/` mirroring modules, e.g., `tests/test_logger.py`.
+- Run tests: `make test` or `pytest -q`.
 - Isolate network/API: mock `requests.get` and OpenAI client; do not hit real endpoints in unit tests.
 - Aim for fast, deterministic tests; add docstring examples where appropriate.
 
@@ -43,8 +45,32 @@
 - Format: `ruff format .`
 - Static checks: `ruff check .` (fixable issues via `ruff check --fix .`).
 - Deeper analysis: `pylint $(git ls-files "*.py")`.
-- Type checks: `mypy .` (uses Pydantic plugin). Resolve or ignore judiciously.
-- Repeat fix → check until zero issues (style, lint, type). Commit only when clean.
+- Type checks: `mypy .` (uses Pydantic plugin).
+- Tests: `pytest -q` (or `make test`).
+- Preferred: run `make check` to do all the above in order.
+- Repeat fix → check until zero issues and all tests pass. Commit only when clean.
+
+## Dependencies Hygiene
+- When adding new imports, update `requirements.txt` accordingly (runtime vs dev).
+- Install deps consistently via `pip install -r requirements.txt` to keep local dev aligned.
+
+## Session Bootstrap (New Shells/CI Agents)
+- Activate env: `source .venv/bin/activate` (create if missing, then install).
+- Install/refresh deps: `pip install -r requirements.txt` (always after pulling changes).
+- Verify toolchain: run `make check` before starting work; fix issues locally.
+- Prefer `python -m pytest` and `python -m ruff` to avoid PATH/version confusion.
+
+## Data Prerequisites
+- OpenBible boundaries: ensure `datasets/bible-section-counts.txt` exists.
+  - Download: `curl -fsSL https://a.openbible.info/data/bible-section-counts.txt -o datasets/bible-section-counts.txt`
+- Network note: running `python load_bsb.py` fetches BSB plaintext (`requests.get`). Tests mock network calls.
+
+## Common Pitfalls & Tips
+- Tool version drift: always reinstall from `requirements.txt` after pulling to align Ruff/Pylint/Pytest versions.
+- Line length: Ruff enforces 100 chars; split long f-strings or assign to variables to satisfy E501.
+- Tests not found: use `make test` or `python -m pytest -q` from repo root so pytest discovers `tests/`.
+- Unnecessary parentheses: avoid extra tuple parentheses and similar; pyupgrade (UP) flags these.
+- Broad except: avoid `except Exception`; Ruff BLE rules flag overly broad exception handlers.
 
 ## Editor Type Checking (Pyright/Pylance)
 - IDEs like VS Code run Pylance/Pyright in the editor. These can show hints not surfaced by CLI tools.

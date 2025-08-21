@@ -31,7 +31,7 @@ def try_import(names: Iterable[str]) -> int:
             mod = importlib.import_module(name)
             version = getattr(mod, "__version__", "unknown")
             print(f"OK   {name} {version}")
-        except Exception as exc:  # noqa: BLE001 - report any failure
+        except Exception as exc:  # noqa: BLE001 - report any failure  # pylint: disable=broad-exception-caught
             failures += 1
             print(f"FAIL {name}: {exc}", file=sys.stderr)
     return failures

@@ -1,16 +1,17 @@
 PYFILES := $(shell git ls-files "*.py")
-RUFF ?= .venv/bin/ruff
+RUFF_CMD ?= python -m ruff
 PYLINT ?= .venv/bin/pylint
+PYTEST ?= .venv/bin/pytest
 
-.PHONY: fmt lint fix ruff-format ruff-check pylint typecheck pyright
+.PHONY: fmt lint fix ruff-format ruff-check pylint typecheck pyright test check
 
 fmt: ruff-format
 
 ruff-format:
-	$(RUFF) format .
+	$(RUFF_CMD) format .
 
 ruff-check:
-	$(RUFF) check .
+	$(RUFF_CMD) check .
 
 pylint:
 	$(PYLINT) $(PYFILES)
@@ -18,8 +19,8 @@ pylint:
 lint: ruff-check pylint
 
 fix:
-	$(RUFF) check --fix .
-	$(RUFF) format .
+	$(RUFF_CMD) check --fix .
+	$(RUFF_CMD) format .
 
 typecheck:
 	.venv/bin/mypy .
@@ -32,3 +33,8 @@ pyright:
 	else \
 	  echo "Pyright not installed (requires Node). Skipping." ; \
 	fi
+
+test:
+	python -m pytest -q
+
+check: fix lint typecheck test
