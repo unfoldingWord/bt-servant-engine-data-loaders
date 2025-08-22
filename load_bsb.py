@@ -381,7 +381,7 @@ def post_chunks_to_servant(
             "collection": collection,
             "name": ref,
             "text": f"{ref}\n\n{text}",
-            "metadata": {"ref": ref, "source": "BSB"},
+            "metadata": {"name": ref, "ref": ref, "source": "bsb"},
         }
         try:
             resp = requests.post(url, json=payload, headers=headers, timeout=timeout)
