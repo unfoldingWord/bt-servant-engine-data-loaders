@@ -1,3 +1,4 @@
+# pylint: disable=too-many-locals,unused-argument,unused-variable
 from __future__ import annotations
 
 import re

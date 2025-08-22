@@ -13,6 +13,8 @@ class Config(BaseSettings):
 
     openai_api_key: str = Field(default="", validation_alias="OPENAI_API_KEY")
     data_loaders_log_level: str = Field(default="info", validation_alias="DATA_LOADERS_LOG_LEVEL")
+    servant_api_base_url: str = Field(default="", validation_alias="SERVANT_API_BASE_URL")
+    servant_api_token: str = Field(default="", validation_alias="SERVANT_API_TOKEN")
 
 
 # Single shared instance to import elsewhere

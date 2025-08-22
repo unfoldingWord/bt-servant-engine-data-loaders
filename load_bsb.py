@@ -17,6 +17,7 @@ import uuid
 
 import requests
 
+from config import config as settings
 from logger import get_logger
 
 logger = get_logger(__name__)
@@ -229,6 +230,7 @@ def _to_int(s: str) -> int:
         return 0
 
 
+# pylint: disable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements,too-many-nested-blocks
 def group_semantic_chunks(
     verses: Iterable[dict[str, str]],
     *,
@@ -330,14 +332,78 @@ def group_semantic_chunks(
 
 
 def main() -> None:
-    """Entrypoint to fetch verses, chunk them by sections, and log outputs."""
+    """Entrypoint to fetch, chunk, and insert into servant engine."""
     verses = fetch_verses()
     logger.info("Fetched %d BSB verses", len(verses))
 
-    # Only output chunks (no individual verses, no verse text)
-    chunks = group_semantic_chunks(verses, include_text=False)
-    for c in chunks:
-        logger.info("CHUNK %s", c["ref"])
+    # Build chunks including the text for insertion
+    chunks = group_semantic_chunks(verses, include_text=True)
+    logger.info("Prepared %d chunks for insertion", len(chunks))
+
+    # Insert into servant engine
+
+    if not settings.servant_api_base_url or not settings.servant_api_token:
+        logger.error("Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN. Skipping insertion.")
+        return
+    post_chunks_to_servant(
+        chunks,
+        base_url=settings.servant_api_base_url,
+        token=settings.servant_api_token,
+        collection="bsb",
+    )
+
+
+def post_chunks_to_servant(
+    chunks: list[dict[str, str]],
+    *,
+    base_url: str,
+    token: str,
+    collection: str = "bsb",
+    timeout: int = 30,
+) -> tuple[int, int]:
+    """Send each chunk to the servant engine /add-document endpoint.
+
+    Returns a (successes, failures) tuple. Logs details and continues on per-item errors.
+    """
+    if not base_url or not token:
+        raise RuntimeError("SERVANT_API_BASE_URL and SERVANT_API_TOKEN must be configured")
+
+    url = base_url.rstrip("/") + "/add-document"
+    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+    ok, fail = 0, 0
+    logger.info("Posting %d chunks to %s", len(chunks), url)
+    for ch in chunks:
+        ref = ch.get("ref", ch["id"])
+        text = ch.get("text", "")
+        payload = {
+            "document_id": ref,
+            "collection": collection,
+            "name": ref,
+            "text": f"{ref}\n\n{text}",
+            "metadata": {"ref": ref, "source": "BSB"},
+        }
+        try:
+            resp = requests.post(url, json=payload, headers=headers, timeout=timeout)
+        except requests.RequestException as exc:  # pragma: no cover - network error path
+            fail += 1
+            logger.error("POST %s failed: %s", url, exc)
+            continue
+
+        if 200 <= resp.status_code < 300:
+            ok += 1
+            logger.debug("Posted chunk %s ok", ch.get("ref", ch["id"]))
+        else:
+            fail += 1
+            logger.error(
+                "POST %s returned %s for chunk %s; body=%s",
+                url,
+                resp.status_code,
+                ch.get("ref", ch["id"]),
+                getattr(resp, "text", "<no body>"),
+            )
+    logger.info("Chunk posting complete: %d success, %d failed", ok, fail)
+    return ok, fail
 
 
 if __name__ == "__main__":
