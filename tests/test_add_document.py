@@ -51,5 +51,5 @@ def test_post_chunks_calls_add_document(monkeypatch) -> None:
         assert payload["document_id"] == ch["ref"]
         assert payload["collection"] == "bsb"
         assert payload["name"] == ch["ref"]
-        assert payload["text"].startswith(f"{ch['ref']}\n\n")
+        assert payload["text"].startswith(f"Reference: {ch['ref']}\nIncluded Verses: ")
         assert payload["metadata"].get("ref") == ch["ref"]

@@ -318,7 +318,15 @@ def group_semantic_chunks(
                 start_ref = f"{start_v['book']} {start_v['chapter']}:{start_v['verse']}"
                 end_ref = f"{end_v['book']} {end_v['chapter']}:{end_v['verse']}"
                 ref = start_ref if i == chosen else f"{start_ref}–{end_ref}"
-                chunk: dict[str, str] = {"id": str(uuid.uuid4()), "ref": ref}
+                # Compose chunk with reference and included verses list
+                included_verses = ", ".join(
+                    f"{v['book']} {v['chapter']}:{v['verse']}" for v in vlist[i : chosen + 1]
+                )
+                chunk: dict[str, str] = {
+                    "id": str(uuid.uuid4()),
+                    "ref": ref,
+                    "included_verses": included_verses,
+                }
                 if include_text:
                     text = " ".join(v["text"] for v in vlist[i : chosen + 1])
                     chunk["text"] = text
@@ -376,11 +384,15 @@ def post_chunks_to_servant(
     for ch in chunks:
         ref = ch.get("ref", ch["id"])
         text = ch.get("text", "")
+        included = ch.get("included_verses", "")
+        header = (
+            f"Reference: {ref}\nIncluded Verses: {included}" if included else f"Reference: {ref}"
+        )
         payload = {
             "document_id": ref,
             "collection": collection,
             "name": ref,
-            "text": f"{ref}\n\n{text}",
+            "text": f"{header}\n\n{text}",
             "metadata": {"name": ref, "ref": ref, "source": "bsb"},
         }
         try:
