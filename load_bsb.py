@@ -381,6 +381,7 @@ def post_chunks_to_servant(
 
     ok, fail = 0, 0
     logger.info("Posting %d chunks to %s", len(chunks), url)
+    chunk_id = 1
     for ch in chunks:
         ref = ch.get("ref", ch["id"])
         text = ch.get("text", "")
@@ -388,13 +389,15 @@ def post_chunks_to_servant(
         header = (
             f"Reference: {ref}\nIncluded Verses: {included}" if included else f"Reference: {ref}"
         )
+        document_id = str(chunk_id)
         payload = {
-            "document_id": ref,
+            "document_id": document_id,
             "collection": collection,
             "name": ref,
             "text": f"{header}\n\n{text}",
             "metadata": {"name": ref, "ref": ref, "source": "bsb"},
         }
+        chunk_id += 1
         try:
             resp = requests.post(url, json=payload, headers=headers, timeout=timeout)
         except requests.RequestException as exc:  # pragma: no cover - network error path
@@ -404,14 +407,14 @@ def post_chunks_to_servant(
 
         if 200 <= resp.status_code < 300:
             ok += 1
-            logger.debug("Posted chunk %s ok", ch.get("ref", ch["id"]))
+            logger.debug("Posted chunk %s for ref %s, ok", document_id, ch.get("ref", ""))
         else:
             fail += 1
             logger.error(
                 "POST %s returned %s for chunk %s; body=%s",
                 url,
                 resp.status_code,
-                ch.get("ref", ch["id"]),
+                ch.get("ref", ""),
                 getattr(resp, "text", "<no body>"),
             )
     logger.info("Chunk posting complete: %d success, %d failed", ok, fail)

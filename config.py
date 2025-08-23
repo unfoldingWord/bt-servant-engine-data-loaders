@@ -16,6 +16,9 @@ class Config(BaseSettings):
     servant_api_base_url: str = Field(default="", validation_alias="SERVANT_API_BASE_URL")
     servant_api_token: str = Field(default="", validation_alias="SERVANT_API_TOKEN")
 
+    # aquifer configs
+    aquifer_base_url: str = Field(default="", validation_alias="AQUIFER_BASE_URL")
+    aquifer_api_key: str = Field(default="", validation_alias="AQUIFER_API_KEY")
 
 # Single shared instance to import elsewhere
 config = Config()
