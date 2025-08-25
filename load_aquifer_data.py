@@ -147,10 +147,6 @@ def add_tyndale_dictionary_documents(
 
 
 def main():
-    data = fetch_aquifer_resource_types()
-    logger.info("Aquifer resource types:\n%s", json.dumps(data, indent=3))
-    logger.info("%s", "-" * 44)
-
     add_tyndale_dictionary_documents()
 
 
