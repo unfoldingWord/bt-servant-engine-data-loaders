@@ -22,6 +22,8 @@
 - Tools: Ruff (formatter + lint) and Pylint. Keep both clean before committing.
 - Modules/files: `snake_case.py`; functions/variables: `snake_case`; constants: `UPPER_CASE`; classes: `CapWords`.
 - Logging: use `get_logger(__name__)`; avoid `print` in modules.
+- Logger placement: initialize once at module scope near the top (after imports), e.g. `logger = get_logger(__name__)`. Do not create loggers inside functions or mid-file unless necessary to avoid a circular import.
+- Side effects: avoid heavy work at import time; logger creation at import is fine.
 - Configuration: read from `config` (do not `os.getenv` directly in modules).
 
 ## Testing Guidelines
