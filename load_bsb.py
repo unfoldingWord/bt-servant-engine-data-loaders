@@ -19,6 +19,7 @@ import requests
 
 from config import config as settings
 from logger import get_logger
+from servant_client import post_documents_to_servant
 
 logger = get_logger(__name__)
 
@@ -369,18 +370,8 @@ def post_chunks_to_servant(
     collection: str = "bsb",
     timeout: int = 30,
 ) -> tuple[int, int]:
-    """Send each chunk to the servant engine /add-document endpoint.
-
-    Returns a (successes, failures) tuple. Logs details and continues on per-item errors.
-    """
-    if not base_url or not token:
-        raise RuntimeError("SERVANT_API_BASE_URL and SERVANT_API_TOKEN must be configured")
-
-    url = base_url.rstrip("/") + "/chroma/add-document"
-    headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
-
-    ok, fail = 0, 0
-    logger.info("Posting %d chunks to %s", len(chunks), url)
+    """Convert BSB chunks into documents and post via shared client."""
+    documents: list[dict[str, str]] = []
     chunk_id = 1
     for ch in chunks:
         ref = ch.get("ref", ch["id"])
@@ -390,35 +381,18 @@ def post_chunks_to_servant(
             f"Reference: {ref}\nIncluded Verses: {included}" if included else f"Reference: {ref}"
         )
         document_id = str(chunk_id)
-        payload = {
-            "document_id": document_id,
-            "collection": collection,
-            "name": ref,
-            "text": f"{header}\n\n{text}",
-            "metadata": {"name": ref, "ref": ref, "source": "bsb"},
-        }
+        documents.append(
+            {
+                "document_id": document_id,
+                "collection": collection,
+                "name": ref,
+                "text": f"{header}\n\n{text}",
+                "metadata": {"name": ref, "ref": ref, "source": "bsb"},
+            }
+        )
         chunk_id += 1
-        try:
-            resp = requests.post(url, json=payload, headers=headers, timeout=timeout)
-        except requests.RequestException as exc:  # pragma: no cover - network error path
-            fail += 1
-            logger.error("POST %s failed: %s", url, exc)
-            continue
 
-        if 200 <= resp.status_code < 300:
-            ok += 1
-            logger.debug("Posted chunk %s for ref %s, ok", document_id, ch.get("ref", ""))
-        else:
-            fail += 1
-            logger.error(
-                "POST %s returned %s for chunk %s; body=%s",
-                url,
-                resp.status_code,
-                ch.get("ref", ""),
-                getattr(resp, "text", "<no body>"),
-            )
-    logger.info("Chunk posting complete: %d success, %d failed", ok, fail)
-    return ok, fail
+    return post_documents_to_servant(documents, base_url=base_url, token=token, timeout=timeout)
 
 
 if __name__ == "__main__":

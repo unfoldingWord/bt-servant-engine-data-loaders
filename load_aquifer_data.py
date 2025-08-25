@@ -5,6 +5,7 @@ import requests
 
 from config import config
 from logger import get_logger
+from servant_client import post_documents_to_servant
 
 # Module-level logger should live near the top of the module
 logger = get_logger(__name__)
@@ -55,17 +56,22 @@ def fetch_aquifer_resource_types() -> Any:
     return fetch_aquifer_api_data("resources/types")
 
 
-def search_aquifer_resources(
+# pylint: disable=too-many-branches,too-many-locals
+def add_tyndale_dictionary_documents(
     collection_code: str = "TyndaleBibleDictionary",
     language_code: str = "eng",
     limit: int = 100,
-) -> list[dict[str, Any]]:
-    """Return all Aquifer resources for a collection/language.
+) -> None:
+    """Fetch Tyndale Dictionary resources, transform, and insert into servant.
 
     - Paginates with ``limit`` and accumulates ``items`` until no more pages
       or the reported ``totalItemCount`` is reached.
     - Logs compact progress at debug level after each page.
     """
+    if not config.servant_api_base_url or not config.servant_api_token:
+        logger.error("Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN. Skipping insertion.")
+        return None
+
     detailed_items: list[dict[str, Any]] = []
     offset = 0
     total_count: int | None = None
@@ -92,6 +98,7 @@ def search_aquifer_resources(
             break
 
         # For each search result, fetch the detailed resource by id.
+        page_batch: list[dict[str, Any]] = []
         for item in items:
             resource_id = item.get("id") if isinstance(item, dict) else None
             if not resource_id:
@@ -106,7 +113,22 @@ def search_aquifer_resources(
             transformed = _transform_detail(detail)
 
             logger.info("Transformed resource:\n%s", json.dumps(transformed, indent=3))
+            page_batch.append(transformed)
             detailed_items.append(transformed)
+
+        # Post this page's batch in one request loop for efficiency
+        if page_batch:
+            ok, fail = post_documents_to_servant(
+                page_batch,
+                base_url=config.servant_api_base_url,
+                token=config.servant_api_token,
+            )
+            logger.info(
+                "Posted %d docs this page: %d success, %d failed",
+                len(page_batch),
+                ok,
+                fail,
+            )
         offset += len(items)
 
         if total_count is not None:
@@ -120,8 +142,8 @@ def search_aquifer_resources(
         if (total_count is not None and offset >= int(total_count)) or len(items) < limit:
             break
 
-    logger.info("Fetched %d Aquifer resources (transformed)", len(detailed_items))
-    return detailed_items
+    logger.info("Inserted %d Tyndale dictionary documents", len(detailed_items))
+    return None
 
 
 def main():
@@ -129,8 +151,7 @@ def main():
     logger.info("Aquifer resource types:\n%s", json.dumps(data, indent=3))
     logger.info("%s", "-" * 44)
 
-    data = search_aquifer_resources()
-    logger.info("Aquifer resources:\n%s", json.dumps(data, indent=3))
+    add_tyndale_dictionary_documents()
 
 
 if __name__ == "__main__":
