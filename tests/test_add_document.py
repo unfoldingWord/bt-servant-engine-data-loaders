@@ -19,14 +19,20 @@ def test_post_chunks_calls_add_document(monkeypatch) -> None:
     sample_text = _sample_bsb_text()
 
     # Mock GET for BSB fetch
-    def fake_get(url: str, timeout: int = 30):  # noqa: ARG001
+    def fake_get(_url: str, _timeout: int = 30, **_kwargs: Any):
         return SimpleNamespace(text=sample_text, raise_for_status=lambda: None)
 
     calls: list[dict[str, Any]] = []
 
     # Mock POST for add-document
-    def fake_post(url: str, json: dict[str, Any], headers: dict[str, str], timeout: int = 30):  # noqa: ARG001
-        calls.append({"url": url, "json": json, "headers": headers})
+    def fake_post(
+        _url: str,
+        json: dict[str, Any],
+        headers: dict[str, str],
+        _timeout: int = 30,
+        **_kwargs: Any,
+    ):
+        calls.append({"url": _url, "json": json, "headers": headers})
         return SimpleNamespace(status_code=200, text="ok")
 
     monkeypatch.setattr(lb.requests, "get", fake_get)
