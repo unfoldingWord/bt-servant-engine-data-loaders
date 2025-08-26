@@ -41,6 +41,7 @@ def _iter_tsv_rows(path: Path) -> list[dict[str, str]]:
         if reader.fieldnames is None or not required.issubset(set(reader.fieldnames)):
             logger.warning("Skipping %s due to missing required columns", path)
             return rows
+        file_stem = path.stem  # e.g., tn_ACT
         for row in reader:
             # Normalize to str keys/values and keep only relevant fields
             ref = (row.get("Reference") or "").strip()
@@ -49,7 +50,7 @@ def _iter_tsv_rows(path: Path) -> list[dict[str, str]]:
             if not row_id or not ref:
                 # Without ID or Reference we cannot construct a valid document
                 continue
-            rows.append({"Reference": ref, "ID": row_id, "Note": note})
+            rows.append({"Reference": ref, "ID": row_id, "Note": note, "_file_stem": file_stem})
     return rows
 
 
@@ -64,11 +65,14 @@ def _build_document(row: dict[str, str]) -> dict[str, Any]:
     ref = row["Reference"]
     row_id = row["ID"]
     note = row["Note"]
-    text = f"{ref}\n\n{note}"
+    file_stem = row.get("_file_stem", "").strip()
+    # Prepend TSV filename stem (e.g., tn_ACT) to the reference for name and text header
+    qualified_ref = f"{file_stem}_{ref}" if file_stem else ref
+    text = f"{qualified_ref}\n\n{note}"
     document = {
         "document_id": row_id,
         "collection": COLLECTION,
-        "name": ref,
+        "name": qualified_ref,
         "text": text,
         "metadata": {"source": row_id},
     }
