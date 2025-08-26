@@ -103,6 +103,25 @@ def add_uw_translation_notes_documents() -> None:
         logger.warning("No rows found across %d TSV files", len(tsv_files))
         return None
 
+    # Optionally resume after a specific document_id (skip up to and including it)
+    resume_after = (config.uw_tn_resume_after_document_id or "").strip()
+    if resume_after:
+        try:
+            idx = next(i for i, r in enumerate(all_rows) if r.get("ID") == resume_after)
+            skipped = idx + 1
+            all_rows = all_rows[skipped:]
+            logger.info(
+                "Resume-after requested for ID '%s': skipped %d rows, %d remain",
+                resume_after,
+                skipped,
+                len(all_rows),
+            )
+        except StopIteration:
+            logger.warning(
+                "Resume-after ID '%s' not found in dataset. Proceeding without skipping.",
+                resume_after,
+            )
+
     documents = [_build_document(r) for r in all_rows]
     logger.info(
         "Prepared %d tN documents from %d TSV files in %s",

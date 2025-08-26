@@ -20,6 +20,12 @@ class Config(BaseSettings):
     aquifer_base_url: str = Field(default="", validation_alias="AQUIFER_BASE_URL")
     aquifer_api_key: str = Field(default="", validation_alias="AQUIFER_API_KEY")
 
+    # loader-specific options
+    uw_tn_resume_after_document_id: str = Field(
+        default="",
+        validation_alias="UW_TN_RESUME_AFTER_DOCUMENT_ID",
+    )
+
 
 # Single shared instance to import elsewhere
 config = Config()
