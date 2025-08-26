@@ -6,7 +6,7 @@ from aquifer_common import add_aquifer_documents
 def main() -> None:
     add_aquifer_documents(
         collection_code="BiblicaStudyNotesKeyTerms",
-        collection="biblical_study_notes_key_terms",
+        collection="biblica_study_notes_key_terms",
         language_code="eng",
         limit=100,
     )
