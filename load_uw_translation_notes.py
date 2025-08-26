@@ -18,6 +18,7 @@ Run directly with: `python load_uw_translation_notes.py`.
 from __future__ import annotations
 
 import csv
+import json
 from pathlib import Path
 from typing import Any
 
@@ -76,7 +77,7 @@ def _build_document(row: dict[str, str]) -> dict[str, Any]:
         "text": text,
         "metadata": {"source": row_id},
     }
-    logger.info("Built tN document: %s", document)
+    logger.info("Built tN document:\n%s", json.dumps(document, indent=3, ensure_ascii=False))
     return document
 
 
