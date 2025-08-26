@@ -76,6 +76,11 @@
   - Or use Make with override: `make PY=.venv/bin/python check`.
 - Recording environment issues: If an agent encounters interpreter path issues, add a brief note in the PR/commit body about the workaround used.
 
+### Tests and Lint Are Mandatory
+- Do not ask to skip or defer running tests. Fix issues immediately.
+- If lint warnings arise in tests (e.g., unused params), adjust tests to satisfy linters (e.g., use `_arg`, `**kwargs`, or split long lines) so `make check` remains green.
+- If a legacy file is superseded by a refactor and unused, remove it to keep linters green and the codebase tidy.
+
 ## Commit Titles from Agents
 - Prefix all agent-authored commits with `(CODEX) ` to make authorship clear.
   - Example: `(CODEX) refactor: extract shared Aquifer loader`
