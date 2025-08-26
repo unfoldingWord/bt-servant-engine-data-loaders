@@ -69,13 +69,15 @@ def _build_document(row: dict[str, str]) -> dict[str, Any]:
     file_stem = row.get("_file_stem", "").strip()
     # Prepend TSV filename stem (e.g., tn_ACT) to the reference for name and text header
     qualified_ref = f"{file_stem}_{ref}" if file_stem else ref
+    # Also qualify the document_id to ensure uniqueness across books
+    qualified_id = f"{file_stem}_{row_id}" if file_stem else row_id
     text = f"{qualified_ref}\n\n{note}"
     document = {
-        "document_id": row_id,
+        "document_id": qualified_id,
         "collection": COLLECTION,
         "name": qualified_ref,
         "text": text,
-        "metadata": {"source": row_id},
+        "metadata": {"source": qualified_id},
     }
     logger.info("Built tN document:\n%s", json.dumps(document, indent=3, ensure_ascii=False))
     return document
@@ -107,7 +109,14 @@ def add_uw_translation_notes_documents() -> None:
     resume_after = (config.uw_tn_resume_after_document_id or "").strip()
     if resume_after:
         try:
-            idx = next(i for i, r in enumerate(all_rows) if r.get("ID") == resume_after)
+
+            def _matches(r: dict[str, str]) -> bool:
+                raw = r.get("ID", "")
+                stem = r.get("_file_stem", "")
+                qualified = f"{stem}_{raw}" if stem and raw else raw
+                return resume_after in (raw, qualified)
+
+            idx = next(i for i, r in enumerate(all_rows) if _matches(r))
             skipped = idx + 1
             all_rows = all_rows[skipped:]
             logger.info(
