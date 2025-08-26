@@ -19,6 +19,7 @@ def post_documents_to_servant(
     timeout: int = 30,
     retries: int = 2,
     retry_backoff: float = 0.5,
+    delay_between_requests: float = 0.0,
 ) -> tuple[int, int]:
     """Send each document to the servant engine /chroma/add-document endpoint.
 
@@ -65,5 +66,8 @@ def post_documents_to_servant(
                 getattr(resp, "text", "<no body>"),
             )
             break
+        # Optional fixed pacing between documents to avoid overwhelming the server
+        if delay_between_requests > 0:
+            time.sleep(delay_between_requests)
     logger.info("Document posting complete: %d success, %d failed", ok, fail)
     return ok, fail

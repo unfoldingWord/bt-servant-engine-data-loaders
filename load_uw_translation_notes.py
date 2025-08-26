@@ -143,6 +143,7 @@ def add_uw_translation_notes_documents() -> None:
         documents,
         base_url=config.servant_api_base_url,
         token=config.servant_api_token,
+        delay_between_requests=0.2,
     )
     logger.info(
         "Posted %d tN documents to collection '%s': %d success, %d failed",
