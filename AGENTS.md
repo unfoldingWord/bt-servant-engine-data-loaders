@@ -15,6 +15,7 @@
 - Type check (mypy): `make typecheck`.
 - Tests (pytest): `make test` (or `python -m pytest -q`).
 - All checks (format → lint → typecheck → tests): `make check`.
+  - Tip for agents/CI: you can force the interpreter used by Make by running `make PY=.venv/bin/python check`.
 - Example one-shot: `OPENAI_API_KEY=... python old_load_bsb.py`
 
 ## Coding Style & Naming Conventions
@@ -61,6 +62,24 @@
 - Install/refresh deps: `pip install -r requirements.txt` (always after pulling changes).
 - Verify toolchain: run `make check` before starting work; fix issues locally.
 - Prefer `python -m pytest` and `python -m ruff` to avoid PATH/version confusion.
+  - If `python` is not resolvable in subshells (e.g., Make), run with `PY=.venv/bin/python` (see Makefile).
+
+## Agent Runbook and Non-Negotiables
+- Test suite MUST run: Never skip `pytest`. If tests cannot run, fix the environment first.
+- When Make cannot find `python` but `python3` or venv python works:
+  - Create/refresh venv: `python3 -m venv .venv && .venv/bin/python -m pip install -r requirements.txt`.
+  - Run checks using venv interpreter explicitly:
+    - `.venv/bin/python -m ruff check --fix . && .venv/bin/python -m ruff format .`
+    - `.venv/bin/pylint $(git ls-files "*.py")`
+    - `.venv/bin/mypy .`
+    - `.venv/bin/python -m pytest -q`
+  - Or use Make with override: `make PY=.venv/bin/python check`.
+- Recording environment issues: If an agent encounters interpreter path issues, add a brief note in the PR/commit body about the workaround used.
+
+## Commit Titles from Agents
+- Prefix all agent-authored commits with `(CODEX) ` to make authorship clear.
+  - Example: `(CODEX) refactor: extract shared Aquifer loader`
+  - Commit bodies should include concise details of changes and any environment notes.
 
 ## Data Prerequisites
 - OpenBible boundaries: ensure `datasets/bible-section-counts.txt` exists.

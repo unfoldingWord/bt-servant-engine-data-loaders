@@ -1,5 +1,7 @@
 PYFILES := $(shell git ls-files "*.py")
-RUFF_CMD ?= python -m ruff
+# Preferred interpreter. Override with `make PY=.venv/bin/python check`.
+PY ?= python
+RUFF_CMD ?= $(PY) -m ruff
 PYLINT ?= .venv/bin/pylint
 PYTEST ?= .venv/bin/pytest
 
@@ -35,6 +37,6 @@ pyright:
 	fi
 
 test:
-	python -m pytest -q
+	$(PY) -m pytest -q
 
 check: fix lint typecheck test
