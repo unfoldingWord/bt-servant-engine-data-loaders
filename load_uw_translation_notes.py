@@ -65,13 +65,15 @@ def _build_document(row: dict[str, str]) -> dict[str, Any]:
     row_id = row["ID"]
     note = row["Note"]
     text = f"{ref}\n\n{note}"
-    return {
+    document = {
         "document_id": row_id,
         "collection": COLLECTION,
         "name": ref,
         "text": text,
         "metadata": {"source": row_id},
     }
+    logger.info("Built tN document: %s", document)
+    return document
 
 
 def add_uw_translation_notes_documents() -> None:
