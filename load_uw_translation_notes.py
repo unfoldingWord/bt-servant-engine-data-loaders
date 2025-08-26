@@ -139,11 +139,16 @@ def add_uw_translation_notes_documents() -> None:
         DATASET_ROOT,
     )
 
+    # Throttle duration from env (milliseconds), default 200ms
+    delay_sec = max(0.0, float(config.uw_tn_post_delay_ms) / 1000.0)
+    if delay_sec > 0:
+        logger.info("Applying throttle delay between requests: %.3fs", delay_sec)
+
     ok, fail = post_documents_to_servant(
         documents,
         base_url=config.servant_api_base_url,
         token=config.servant_api_token,
-        delay_between_requests=0.2,
+        delay_between_requests=delay_sec,
     )
     logger.info(
         "Posted %d tN documents to collection '%s': %d success, %d failed",

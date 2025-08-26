@@ -25,6 +25,10 @@ class Config(BaseSettings):
         default="",
         validation_alias="UW_TN_RESUME_AFTER_DOCUMENT_ID",
     )
+    uw_tn_post_delay_ms: float = Field(
+        default=200.0,
+        validation_alias="UW_TN_POST_DELAY_MS",
+    )
 
 
 # Single shared instance to import elsewhere
