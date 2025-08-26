@@ -13,6 +13,7 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 import re
+from typing import Any
 import uuid
 
 import requests
@@ -363,7 +364,7 @@ def main() -> None:
 
 
 def post_chunks_to_servant(
-    chunks: list[dict[str, str]],
+    chunks: list[dict[str, Any]],
     *,
     base_url: str,
     token: str,
@@ -371,8 +372,7 @@ def post_chunks_to_servant(
     timeout: int = 30,
 ) -> tuple[int, int]:
     """Convert BSB chunks into documents and post via shared client."""
-    documents: list[dict[str, str]] = []
-    chunk_id = 1
+    documents: list[dict[str, Any]] = []
     for ch in chunks:
         ref = ch.get("ref", ch["id"])
         text = ch.get("text", "")
@@ -380,7 +380,7 @@ def post_chunks_to_servant(
         header = (
             f"Reference: {ref}\nIncluded Verses: {included}" if included else f"Reference: {ref}"
         )
-        document_id = str(chunk_id)
+        document_id = str(ref)
         documents.append(
             {
                 "document_id": document_id,
@@ -390,7 +390,6 @@ def post_chunks_to_servant(
                 "metadata": {"name": ref, "ref": ref, "source": "bsb"},
             }
         )
-        chunk_id += 1
 
     return post_documents_to_servant(documents, base_url=base_url, token=token, timeout=timeout)
 

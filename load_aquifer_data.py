@@ -1,9 +1,7 @@
 from typing import Any
 
-from logger import get_logger
-
 from aquifer_common import add_aquifer_documents, fetch_aquifer_api_data
-
+from logger import get_logger
 
 logger = get_logger(__name__)
 

@@ -10,13 +10,12 @@ from config import config
 from logger import get_logger
 from servant_client import post_documents_to_servant
 
-
 logger = get_logger(__name__)
 
 
 # Optional accurate token counting
 try:  # pragma: no cover - optional dependency
-    import tiktoken  # type: ignore
+    import tiktoken
 
     _ENCODING = tiktoken.get_encoding("cl100k_base")
 
@@ -96,7 +95,10 @@ def transform_detail(detail: Any, *, collection: str) -> dict[str, Any]:
     }
 
 
-def chunk_document_if_needed(doc: dict[str, Any], *, max_tokens: int = 6500) -> list[dict[str, Any]]:
+# pylint: disable=too-many-locals,too-many-branches,too-many-statements
+def chunk_document_if_needed(
+    doc: dict[str, Any], *, max_tokens: int = 6500
+) -> list[dict[str, Any]]:
     """Chunk a document by markdown headers if it exceeds size.
 
     Logic mirrors the previous Tyndale-specific chunker, but respects the input
@@ -270,6 +272,7 @@ def fetch_aquifer_api_data(endpoint: str, params: dict[str, Any] | None = None) 
     return response.json()
 
 
+# pylint: disable=too-many-locals,too-many-branches
 def add_aquifer_documents(
     *,
     collection_code: str,
@@ -351,4 +354,3 @@ def add_aquifer_documents(
 
     logger.info("Inserted %d documents into collection '%s'", len(detailed_items), collection)
     return None
-
