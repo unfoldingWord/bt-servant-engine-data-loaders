@@ -25,6 +25,7 @@ import requests
 
 from config import config
 from logger import get_logger
+from servant_client import post_documents_to_servant
 
 logger = get_logger(__name__)
 
@@ -33,35 +34,52 @@ DEFAULT_COLLECTION = "uw_translation_notes"
 DEFAULT_DATASET_ROOT = Path(__file__).resolve().parent / "datasets" / "uw_translation_notes"
 
 
-def _gather_expected_ids(dataset_root: Path) -> set[str]:
-    expected: set[str] = set()
+def _docs_from_tsv(path: Path, collection: str) -> dict[str, dict]:
+    docs: dict[str, dict] = {}
+    stem = path.stem  # e.g., tn_ACT
+    try:
+        with path.open("r", encoding="utf-8", newline="") as fh:
+            reader = csv.DictReader(fh, delimiter="\t")
+            if not reader.fieldnames or not {"ID", "Reference", "Note"}.issubset(
+                set(reader.fieldnames)
+            ):
+                logger.warning("Skipping %s due to missing required columns", path)
+                return docs
+            for row in reader:
+                ref = (row.get("Reference") or "").strip()
+                raw_id = (row.get("ID") or "").strip()
+                note = row.get("Note") or ""
+                if not raw_id or not ref:
+                    continue
+                qid = f"{stem}_{raw_id}"
+                qref = f"{stem}_{ref}"
+                docs[qid] = {
+                    "document_id": qid,
+                    "collection": collection,
+                    "name": qref,
+                    "text": f"{qref}\n\n{note}",
+                    "metadata": {"source": qid},
+                }
+    except OSError as exc:  # pragma: no cover - IO path
+        logger.error("Failed reading %s: %s", path, exc)
+    return docs
+
+
+def _gather_documents_map(dataset_root: Path, collection: str) -> dict[str, dict]:
+    """Build qualified_id -> document payload from TSV dataset."""
+    docs: dict[str, dict] = {}
     if not dataset_root.exists():  # pragma: no cover - filesystem path dependency
         logger.error("Dataset root not found: %s", dataset_root)
-        return expected
+        return docs
 
     tsv_files = sorted(dataset_root.glob("*.tsv"))
     if not tsv_files:
         logger.warning("No TSV files found under %s", dataset_root)
-        return expected
+        return docs
 
     for path in tsv_files:
-        stem = path.stem  # e.g., tn_ACT
-        try:
-            with path.open("r", encoding="utf-8", newline="") as fh:
-                reader = csv.DictReader(fh, delimiter="\t")
-                if not reader.fieldnames or "ID" not in reader.fieldnames:
-                    logger.warning("Skipping %s due to missing ID column", path)
-                    continue
-                for row in reader:
-                    raw_id = (row.get("ID") or "").strip()
-                    if not raw_id:
-                        continue
-                    qualified = f"{stem}_{raw_id}"
-                    expected.add(qualified)
-        except OSError as exc:  # pragma: no cover - IO path
-            logger.error("Failed reading %s: %s", path, exc)
-            continue
-    return expected
+        docs.update(_docs_from_tsv(path, collection))
+    return docs
 
 
 def _fetch_collection_ids(
@@ -101,33 +119,44 @@ def _write_lines(lines: Iterable[str], path: Path) -> None:
         logger.error("Failed writing %s: %s", path, exc)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description="Verify tN documents loaded in servant engine")
-    parser.add_argument("--collection", default=DEFAULT_COLLECTION)
-    parser.add_argument("--dataset-root", default=str(DEFAULT_DATASET_ROOT))
-    parser.add_argument(
-        "--output",
-        default=str(Path(__file__).resolve().parent / "logs" / "uw_tn_missing_ids.txt"),
+def _reinsert_missing_documents(missing_ids: list[str], docs_map: dict[str, dict]) -> None:
+    missing_docs = [docs_map[mid] for mid in missing_ids if mid in docs_map]
+    if not missing_docs:
+        logger.warning("No matching documents found in dataset for missing IDs")
+        return
+    delay_sec = max(0.0, float(getattr(config, "uw_tn_post_delay_ms", 200.0)) / 1000.0)
+    logger.info(
+        "Reinserting %d missing documents with delay %.3fs between requests",
+        len(missing_docs),
+        delay_sec,
     )
-    args = parser.parse_args()
+    ok, fail = post_documents_to_servant(
+        missing_docs,
+        base_url=config.servant_api_base_url,
+        token=config.servant_api_token,
+        delay_between_requests=delay_sec,
+    )
+    logger.info("Reinsert complete: %d success, %d failed", ok, fail)
 
-    dataset_root = Path(args.dataset_root)
 
-    # Build expected from dataset
-    expected = _gather_expected_ids(dataset_root)
+def run_verification(
+    collection: str, dataset_root_str: str, output_str: str, reinsert: bool
+) -> None:
+    dataset_root = Path(dataset_root_str)
+    docs_map = _gather_documents_map(dataset_root, collection=collection)
+    expected = set(docs_map.keys())
     logger.info("Expected %d document IDs from dataset", len(expected))
 
-    # Fetch actual from servant
     try:
         actual = _fetch_collection_ids(
             base_url=config.servant_api_base_url,
             token=config.servant_api_token,
-            collection=args.collection,
+            collection=collection,
         )
     except RuntimeError:
         return
 
-    logger.info("Servant reported %d document IDs in collection '%s'", len(actual), args.collection)
+    logger.info("Servant reported %d document IDs in collection '%s'", len(actual), collection)
 
     missing = sorted(expected - actual)
     extras = sorted(actual - expected)
@@ -139,11 +168,37 @@ def main() -> None:
         len(expected & actual),
     )
 
+    output_path = Path(output_str)
     if missing:
-        _write_lines(missing, Path(args.output))
+        _write_lines(missing, output_path)
     if extras:
-        # Also write extras for inspection next to missing file
-        _write_lines(extras, Path(str(args.output).replace("missing", "unexpected")))
+        _write_lines(extras, Path(str(output_path).replace("missing", "unexpected")))
+
+    if reinsert and missing:
+        _reinsert_missing_documents(missing, docs_map)
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Verify tN documents loaded in servant engine")
+    parser.add_argument("--collection", default=DEFAULT_COLLECTION)
+    parser.add_argument("--dataset-root", default=str(DEFAULT_DATASET_ROOT))
+    parser.add_argument(
+        "--output",
+        default=str(Path(__file__).resolve().parent / "logs" / "uw_tn_missing_ids.txt"),
+    )
+    parser.add_argument(
+        "--reinsert-missing",
+        action="store_true",
+        help="If set, attempt to reinsert missing documents using the dataset",
+    )
+    args = parser.parse_args()
+
+    run_verification(
+        collection=args.collection,
+        dataset_root_str=args.dataset_root,
+        output_str=args.output,
+        reinsert=bool(args.reinsert_missing),
+    )
 
 
 if __name__ == "__main__":
