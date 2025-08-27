@@ -13,3 +13,6 @@ openai>=1.40.0
 ruff==0.5.6
 pylint>=3.2.0
 pytest>=8.2.0
+
+# USFM tools
+usfm-grammar==3.1.2
