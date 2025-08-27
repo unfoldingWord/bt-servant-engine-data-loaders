@@ -7,8 +7,6 @@
 \toc3 Psa
 \mt1 Psalms
 
-\cl Psalm
-\ms Book One
 
 \ts\*
 
@@ -212,8 +210,7 @@
 \q1 \v 5 Then allow my enemies to chase and capture me.
 \q2 Allow them to stomp me into the ground
 \q2 and leave me lying {dead} in the dirt.
-\qsSelah
-\qs*
+\qs Selah\qs*
 
 
 \ts\*
@@ -325,8 +322,7 @@
 \q2 but their feet have been caught in that same net.
 \q1 \v 16 So you allow the traps that wicked people make to trap them.
 \q2 Because of that, people can discover that you, Yahweh, are just.
-\qsHiggaion Selah
-\qs*
+\qs Higgaion Selah\qs*
 
 \ts\*
 \q1 \v 17 Wicked people will flee {from you} back to the place where dead people stay.
@@ -339,8 +335,7 @@
 \q2 {Bring them} to your court and judge them!
 \q1 \v 20 Yahweh, teach them that they must be afraid of you and honor you.
 \q2 Cause {the rulers of} nations to know that they are mortal.
-\qsSelah
-\qs*
+\qs Selah\qs*
 
 
 \ts\*
@@ -1510,8 +1505,8 @@
 \ts\*
 
 \c 32
-Test of formatting\v 1 A Maskil of David.
-\q Those whom God has forgiven for rebelling against him
+\d A Maskil of David.
+\q \v 1 Those whom God has forgiven for rebelling against him
 \q2 and those whose sin God has atoned for,
 \q2 these are the ones who God blesses!
 \q1 \v 2 Those whose record of sins Yahweh no longer takes into account,
@@ -1524,8 +1519,7 @@ Test of formatting\v 1 A Maskil of David.
 \q2 my body felt weak and sick,
 \q2 and I groaned all day long.
 \q1 \v 4 Day and night, Yahweh, you afflicted me.
-\q2 My strength was sapped like it would be on a hot summer day. Selah
-\qs*
+\q2 My strength was sapped like it would be on a hot summer day. \qs Selah\qs*
 \ts\*
 \q
 
@@ -1537,8 +1531,7 @@ Test of formatting\v 1 A Maskil of David.
 \q2 “I will tell Yahweh the wrong things that I have done.”
 \q1 When I confessed them, you forgave me,
 \q2 so now I am no longer guilty for the sinful things I did.
-\qsSelah
-\qs*
+\qs Selah\qs*
  \q \v 6 Therefore all the people who are godly should pray to you
 \q2 when they realize they have sinned.
 \q1 {If they do that,} then it is certain that difficulties will not overwhelm them like a great flood.
@@ -1547,7 +1540,7 @@ Test of formatting\v 1 A Maskil of David.
 \q1 \v 7 You are like a place where I can hide from my enemies;
 \q2 you protect me from troubles
 \q2 and surround me with people who are joyfully praising you for saving me from my enemies.
-\qsSelah
+\qs Selah\qs*
 \v 8 I will teach you about how you should conduct your life.
 \q2 I will teach you personally.
 
