@@ -8,6 +8,8 @@ servant engine collection "ust".
 from __future__ import annotations
 
 from glob import glob
+import argparse
+import json
 from pathlib import Path
 from typing import Any
 
@@ -64,6 +66,15 @@ def _build_documents(chunks: list[dict[str, Any]], collection: str) -> list[dict
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Load UST USFM into servant, or print chunks")
+    parser.add_argument(
+        "--print-chunks-only",
+        action="store_true",
+        dest="print_only",
+        help="Print the documents that would be posted, as JSON, and do not post",
+    )
+    args = parser.parse_args()
+
     files = sorted(glob(str(DATASET_DIR / "*.usfm")))
     if not files:
         logger.error("No USFM files found under %s", DATASET_DIR)
@@ -76,11 +87,16 @@ def main() -> None:
     chunks = group_semantic_chunks(verses, include_text=True)
     logger.info("Prepared %d UST chunks", len(chunks))
 
+    documents = _build_documents(chunks, collection="ust")
+    if args.print_only:
+        # Print JSON for inspection (no network I/O)
+        print(json.dumps(documents, ensure_ascii=False, indent=3))
+        return
+
     if not settings.servant_api_base_url or not settings.servant_api_token:
         logger.error("Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN. Skipping insertion.")
         return
 
-    documents = _build_documents(chunks, collection="ust")
     ok, fail = post_documents_to_servant(
         documents,
         base_url=settings.servant_api_base_url,
