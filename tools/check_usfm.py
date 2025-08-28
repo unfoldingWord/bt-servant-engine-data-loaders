@@ -12,48 +12,55 @@ Requirements:
   pip install usfm-grammar
 
 """
-import sys
-import os
+
 import argparse
-import json
 from glob import glob
+import json
+import os
+import sys
 
 
 def find_usfm_files(root_dir, pattern):
     # non-recursive in root dir and immediate subdirs? use recursive glob
-    search = os.path.join(root_dir, '**', pattern)
+    search = os.path.join(root_dir, "**", pattern)
     return sorted(glob(search, recursive=True))
 
 
 def read_file(path):
-    for enc in ('utf-8', 'utf-8-sig', 'latin-1'):
+    for enc in ("utf-8", "utf-8-sig", "latin-1"):
         try:
-            with open(path, 'r', encoding=enc) as f:
+            with open(path, encoding=enc) as f:
                 return f.read()
         except UnicodeDecodeError:
             continue
     # last resort
-    with open(path, 'rb') as f:
-        return f.read().decode('latin-1', errors='replace')
+    with open(path, "rb") as f:
+        return f.read().decode("latin-1", errors="replace")
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Check .usfm files for parser errors using usfm-grammar')
-    parser.add_argument('--dir', '-d', default='.', help='Directory to scan (default: current directory)')
-    parser.add_argument('--pattern', '-p', default='*.usfm', help='Glob pattern for USFM files (default: "*.usfm")')
-    parser.add_argument('--quiet', '-q', action='store_true', help='Only output files with errors')
+    parser = argparse.ArgumentParser(
+        description="Check .usfm files for parser errors using usfm-grammar"
+    )
+    parser.add_argument(
+        "--dir", "-d", default=".", help="Directory to scan (default: current directory)"
+    )
+    parser.add_argument(
+        "--pattern", "-p", default="*.usfm", help='Glob pattern for USFM files (default: "*.usfm")'
+    )
+    parser.add_argument("--quiet", "-q", action="store_true", help="Only output files with errors")
     args = parser.parse_args()
 
     try:
-        from usfm_grammar import USFMParser, Filter
+        from usfm_grammar import USFMParser
     except Exception as e:
-        print('Failed to import usfm_grammar. Install it with: pip install usfm-grammar')
-        print('Import error:', str(e))
+        print("Failed to import usfm_grammar. Install it with: pip install usfm-grammar")
+        print("Import error:", str(e))
         sys.exit(2)
 
     files = find_usfm_files(args.dir, args.pattern)
     if not files:
-        print('No .usfm files found (pattern: {}).'.format(args.pattern))
+        print(f"No .usfm files found (pattern: {args.pattern}).")
         sys.exit(0)
 
     any_errors = False
@@ -63,9 +70,9 @@ def main():
         try:
             text = read_file(fp)
         except Exception as e:
-            print(f'Error reading {fp}: {e}')
+            print(f"Error reading {fp}: {e}")
             any_errors = True
-            summary.append({'file': fp, 'error': f'read_error: {e}'})
+            summary.append({"file": fp, "error": f"read_error: {e}"})
             continue
 
         try:
@@ -73,39 +80,39 @@ def main():
             errs = p.errors
         except Exception as e:
             # parser threw; treat as error
-            errs = [{'exception': str(e)}]
+            errs = [{"exception": str(e)}]
 
         # normalize
         if not errs:
             if not args.quiet:
-                print(f'{fp}: OK')
-            summary.append({'file': fp, 'errors': []})
+                print(f"{fp}: OK")
+            summary.append({"file": fp, "errors": []})
         else:
             any_errors = True
-            print(f'{fp}: {len(errs)} error(s)')
+            print(f"{fp}: {len(errs)} error(s)")
             try:
                 print(json.dumps(errs, ensure_ascii=False, indent=2))
             except Exception:
                 print(errs)
-            summary.append({'file': fp, 'errors': errs})
+            summary.append({"file": fp, "errors": errs})
 
     # write a short JSON summary
-    out_summary = 'usfm_check_summary.json'
+    out_summary = "usfm_check_summary.json"
     try:
-        with open(out_summary, 'w', encoding='utf-8') as outf:
+        with open(out_summary, "w", encoding="utf-8") as outf:
             json.dump(summary, outf, ensure_ascii=False, indent=2)
         if not args.quiet:
-            print('\nWrote summary to', out_summary)
+            print("\nWrote summary to", out_summary)
     except Exception as e:
-        print('Failed to write summary file:', e)
+        print("Failed to write summary file:", e)
 
     if any_errors:
-        print('\nOne or more files had errors.')
+        print("\nOne or more files had errors.")
         sys.exit(1)
     else:
-        print('\nAll files parsed without errors.')
+        print("\nAll files parsed without errors.")
         sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
