@@ -79,6 +79,7 @@ def main() -> None:
         return
     verses: list[dict[str, Any]] = []
     for fp in files:
+        logger.info("Parsing %s...", fp)
         verses.extend(parse_usfm_verses(fp))
     logger.info("Parsed %d verses from %d ULT books", len(verses), len(files))
 
