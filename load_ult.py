@@ -51,15 +51,15 @@ def _build_documents(chunks: list[dict[str, Any]], collection: str) -> list[dict
         doc_id = _format_id(collection, code, s_ch, s_vs, e_ch, e_vs)
         header = _format_range_header(code, s_ch, s_vs, e_ch, e_vs)
         text = ch.get("text", "").strip()
-        docs.append(
-            {
+        doc = {
                 "document_id": doc_id,
                 "collection": collection,
                 "name": doc_id,
                 "text": f"{header}\n\n{text}",
                 "metadata": {"source": doc_id},
             }
-        )
+        logger.debug(json.dumps(doc, indent=2))
+        docs.append(doc)
     return docs
 
 
