@@ -99,16 +99,25 @@ def parse_usfm_verses(path: Path | str) -> list[dict[str, Any]]:
     parser = USFMParser(text)
     # Some USFM sources may include non-fatal parse errors (e.g., diacritics in content
     # confused as markers). Be lenient and continue to generate rows while logging.
-    rows = parser.to_list(ignore_errors=True)
-    errs = getattr(parser, "errors", None)
-    if errs:
-        try:
-            err_count = len(errs)  # type: ignore[arg-type]
-        except Exception:  # noqa: BLE001 - defensive; errs could be any sequence-like
-            err_count = 0
-        logger.warning(
-            "USFM parse reported %s issue(s) in %s; proceeding with ignore_errors", err_count, p
-        )
+    try:
+        # Exclude word-level inline markers (e.g., \w ...\w*) which often carry
+        # complex attributes and can trip the converter for some sources, while they
+        # aren't needed for our verse-level chunking.
+        rows = parser.to_list(ignore_errors=True, exclude_markers=["w"])
+        errs = getattr(parser, "errors", None)
+        if errs:
+            try:
+                err_count = len(errs)  # type: ignore[arg-type]
+            except Exception:  # noqa: BLE001 - defensive; errs could be any sequence-like
+                err_count = 0
+            logger.warning(
+                "USFM parse reported %s issue(s) in %s; proceeding with ignore_errors",
+                err_count,
+                p,
+            )
+    except Exception as exc:  # noqa: BLE001 - fallback for sources usfm_grammar can't handle
+        logger.warning("USFM grammar failed for %s (%s); using naive fallback parser", p, exc)
+        return _fallback_parse_usfm_verses(text, source_path=p)
     verses: list[dict[str, Any]] = []
     cur: dict[str, Any] | None = None
     book_code: str | None = None
@@ -139,4 +148,61 @@ def parse_usfm_verses(path: Path | str) -> list[dict[str, Any]]:
     # Clean up whitespace
     for v in verses:
         v["text"] = " ".join(v["text"].split())
+    return verses
+
+
+def _fallback_parse_usfm_verses(text: str, *, source_path: Path | str) -> list[dict[str, Any]]:
+    """Naive USFM verse parser that handles basic \\c and \v markers.
+
+    Intended only as a safety net when usfm_grammar cannot parse. Strips common
+    inline markers like \\w ...\\w* and ignores non-verse content.
+    """
+    import re
+
+    # Derive book code from filename like "01-GEN.usfm" -> "GEN"
+    p = Path(source_path)
+    stem = p.stem
+    code = stem.split("-", 1)[-1].upper() if "-" in stem else stem.upper()
+    code = (code or "").strip()
+    book_name = USFM_CODE_TO_BOOK.get(code, code)
+
+    verses: list[dict[str, Any]] = []
+    cur_ch: str | None = None
+
+    # Pre-compiled regexes
+    re_ch = re.compile(r"^\\c\s+(\d+)")
+    re_vs = re.compile(r"^\\v\s+(\d+)\s+(.*)$")
+    re_w_open = re.compile(r"\\w\s+")
+    re_w_close = re.compile(r"\\w\*")
+    re_any_marker = re.compile(r"\\[a-zA-Z0-9]+\*?")
+
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        m = re_ch.match(line)
+        if m:
+            cur_ch = m.group(1)
+            continue
+        m = re_vs.match(line)
+        if m and cur_ch is not None:
+            vs = m.group(1)
+            body = m.group(2)
+            # Remove paired word markers (keep inner content)
+            body = re_w_open.sub("", body)
+            body = re_w_close.sub("", body)
+            # Drop any remaining bare markers like \s5, \p, etc.
+            body = re_any_marker.sub(
+                lambda _m: "" if _m.group(0) not in ("\\v",) else _m.group(0), body
+            )
+            body = " ".join(body.split())
+            verses.append(
+                {
+                    "book": book_name,
+                    "book_code": code,
+                    "chapter": str(cur_ch),
+                    "verse": str(vs),
+                    "text": body,
+                }
+            )
     return verses
