@@ -145,9 +145,11 @@ def parse_usfm_verses(path: Path | str) -> list[dict[str, Any]]:
     if cur:
         verses.append(cur)
 
-    # Clean up whitespace
+    # Normalize text consistently across datasets: remove any residual word-level
+    # attributes (e.g., |strong=..., x-morph=...), drop stray USFM markers, and
+    # collapse whitespace so embeddings stay clean and comparable.
     for v in verses:
-        v["text"] = " ".join(v["text"].split())
+        v["text"] = _normalize_usfm_text(v["text"])
     return verses
 
 
@@ -210,3 +212,24 @@ def _fallback_parse_usfm_verses(text: str, *, source_path: Path | str) -> list[d
                 }
             )
     return verses
+
+
+def _normalize_usfm_text(text: str) -> str:
+    """Normalize verse text to raw human-readable content.
+
+    - Removes inline attribute tails like "|strong=H430" and "|x-morph=..."
+    - Removes stray USFM markers like "\\s5", "\\p", etc.
+    - Collapses internal whitespace.
+    """
+    import re
+
+    if not text:
+        return ""
+
+    # Remove any pipe-based attribute shards that may survive parsing
+    text = re.sub(r"\|[^\s]+", "", text)
+    # Remove any lingering USFM markers (defensive)
+    text = re.sub(r"\\[A-Za-z0-9]+\*?", "", text)
+    # Collapse whitespace
+    text = " ".join(text.split())
+    return text
