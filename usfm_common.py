@@ -172,9 +172,10 @@ def _fallback_parse_usfm_verses(text: str, *, source_path: Path | str) -> list[d
     # Pre-compiled regexes
     re_ch = re.compile(r"^\\c\s+(\d+)")
     re_vs = re.compile(r"^\\v\s+(\d+)\s+(.*)$")
-    re_w_open = re.compile(r"\\w\s+")
-    re_w_close = re.compile(r"\\w\*")
-    re_any_marker = re.compile(r"\\[a-zA-Z0-9]+\*?")
+    # Match a \\w ... \\w* segment; capture inner content to strip attributes like |strong=, |x-morph=, etc.
+    re_w_segment = re.compile(r"\\w\s+(.*?)\\w\*")
+    # After \\w processing, drop any remaining bare markers like \\s5, \\p, etc.
+    re_any_marker = re.compile(r"\\(?!v\b)[a-zA-Z0-9]+\*?")
 
     for raw_line in text.splitlines():
         line = raw_line.strip()
@@ -188,13 +189,16 @@ def _fallback_parse_usfm_verses(text: str, *, source_path: Path | str) -> list[d
         if m and cur_ch is not None:
             vs = m.group(1)
             body = m.group(2)
-            # Remove paired word markers (keep inner content)
-            body = re_w_open.sub("", body)
-            body = re_w_close.sub("", body)
-            # Drop any remaining bare markers like \s5, \p, etc.
-            body = re_any_marker.sub(
-                lambda _m: "" if _m.group(0) not in ("\\v",) else _m.group(0), body
-            )
+
+            # Replace each \\w segment with just the surface text before the first '|'
+            def _strip_w(mw: re.Match[str]) -> str:
+                inner = mw.group(1)
+                head = inner.split("|", 1)[0]
+                return head
+
+            body = re_w_segment.sub(_strip_w, body)
+            # Drop any remaining bare markers like \\s5, \\p, etc. (but keep the \\v we already parsed)
+            body = re_any_marker.sub("", body)
             body = " ".join(body.split())
             verses.append(
                 {
