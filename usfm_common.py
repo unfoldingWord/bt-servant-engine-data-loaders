@@ -11,6 +11,10 @@ from typing import Any
 
 from usfm_grammar import USFMParser
 
+from logger import get_logger
+
+logger = get_logger(__name__)
+
 # Map USFM 3-letter book codes to canonical English names used by chunking
 USFM_CODE_TO_BOOK: dict[str, str] = {
     # OT
@@ -92,7 +96,19 @@ def parse_usfm_verses(path: Path | str) -> list[dict[str, Any]]:
     """
     p = Path(path)
     text = p.read_text(encoding="utf-8")
-    rows = USFMParser(text).to_list()
+    parser = USFMParser(text)
+    # Some USFM sources may include non-fatal parse errors (e.g., diacritics in content
+    # confused as markers). Be lenient and continue to generate rows while logging.
+    rows = parser.to_list(ignore_errors=True)
+    errs = getattr(parser, "errors", None)
+    if errs:
+        try:
+            err_count = len(errs)  # type: ignore[arg-type]
+        except Exception:  # noqa: BLE001 - defensive; errs could be any sequence-like
+            err_count = 0
+        logger.warning(
+            "USFM parse reported %s issue(s) in %s; proceeding with ignore_errors", err_count, p
+        )
     verses: list[dict[str, Any]] = []
     cur: dict[str, Any] | None = None
     book_code: str | None = None
