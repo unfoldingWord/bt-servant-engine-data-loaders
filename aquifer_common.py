@@ -279,11 +279,17 @@ def add_aquifer_documents(
     collection: str,
     language_code: str = "eng",
     limit: int = 100,
+    log_only: bool = False,
 ) -> None:
     """Fetch Aquifer resources for a collection_code, transform, chunk, and insert into servant."""
     if not config.servant_api_base_url or not config.servant_api_token:
-        logger.error("Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN. Skipping insertion.")
-        return None
+        if log_only:
+            logger.warning(
+                "Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN; proceeding in log-only mode."
+            )
+        else:
+            logger.error("Missing SERVANT_API_BASE_URL or SERVANT_API_TOKEN. Skipping insertion.")
+            return None
 
     detailed_items: list[dict[str, Any]] = []
     offset = 0
@@ -329,17 +335,23 @@ def add_aquifer_documents(
                 detailed_items.append(cdoc)
 
         if page_batch:
-            ok, fail = post_documents_to_servant(
-                page_batch,
-                base_url=config.servant_api_base_url,
-                token=config.servant_api_token,
-            )
-            logger.info(
-                "Posted %d docs this page: %d success, %d failed",
-                len(page_batch),
-                ok,
-                fail,
-            )
+            if log_only:
+                logger.info(
+                    "Log-only mode: would post %d docs this page; skipping post",
+                    len(page_batch),
+                )
+            else:
+                ok, fail = post_documents_to_servant(
+                    page_batch,
+                    base_url=config.servant_api_base_url,
+                    token=config.servant_api_token,
+                )
+                logger.info(
+                    "Posted %d docs this page: %d success, %d failed",
+                    len(page_batch),
+                    ok,
+                    fail,
+                )
         offset += len(items)
 
         if total_count is not None:
