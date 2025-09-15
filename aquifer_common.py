@@ -83,8 +83,43 @@ def transform_detail(detail: Any, *, collection: str) -> dict[str, Any]:
         name_val = str(detail.get("name") or "")
         content = detail.get("content")
         if isinstance(content, list):
-            text_val = "\n\n".join(str(x) for x in content)
+            text_val = "\n\n".join(str(x) for x in content if x is not None)
+        elif isinstance(content, str):
+            text_val = content
+        elif isinstance(content, dict):
+            # Try common textual fields present in Aquifer responses
+            for key in ("markdown", "text", "value", "body", "content"):
+                val = content.get(key)
+                if isinstance(val, str):
+                    text_val = val
+                    break
+                if isinstance(val, list):
+                    text_val = "\n\n".join(str(x) for x in val if x is not None)
+                    break
         document_id_val = str(detail.get("id") or "")
+
+    if not text_val:
+        # Provide visibility into unexpected shapes to aid diagnosis
+        ctype = None
+        csummary = None
+        if isinstance(detail, dict):
+            c = detail.get("content")
+            ctype = type(c).__name__
+            if isinstance(c, dict):
+                csummary = f"dict keys={list(c.keys())[:10]}"
+            elif isinstance(c, list):
+                csummary = f"list len={len(c)} sample={str(c[:1])[:80]}"
+            elif isinstance(c, str):
+                csummary = f"str len={len(c)} head={c[:80]!r}"
+            else:
+                csummary = repr(c)[:120]
+        logger.warning(
+            "transform_detail: empty text for id=%s name=%r content_type=%s content_summary=%s",
+            document_id_val,
+            name_val,
+            ctype,
+            csummary,
+        )
 
     return {
         "name": name_val,
