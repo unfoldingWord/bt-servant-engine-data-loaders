@@ -365,7 +365,6 @@ def add_aquifer_documents(
             transformed = transform_detail(detail, collection=collection)
             chunked_docs = chunk_document_if_needed(transformed)
             for cdoc in chunked_docs:
-                logger.info("Transformed resource:\n%s", json.dumps(cdoc, indent=3))
                 text = cdoc.get("text", "")
                 if not isinstance(text, str) or not text.strip():
                     logger.info(
@@ -374,6 +373,8 @@ def add_aquifer_documents(
                         cdoc.get("name"),
                     )
                     continue
+                # Log only the docs that would be posted/kept
+                logger.info("Transformed resource (kept):\n%s", json.dumps(cdoc, indent=3))
                 page_batch.append(cdoc)
                 detailed_items.append(cdoc)
 
