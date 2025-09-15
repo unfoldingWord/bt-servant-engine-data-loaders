@@ -366,6 +366,14 @@ def add_aquifer_documents(
             chunked_docs = chunk_document_if_needed(transformed)
             for cdoc in chunked_docs:
                 logger.info("Transformed resource:\n%s", json.dumps(cdoc, indent=3))
+                text = cdoc.get("text", "")
+                if not isinstance(text, str) or not text.strip():
+                    logger.info(
+                        "Skipping empty-text document id=%s name=%r",
+                        cdoc.get("document_id"),
+                        cdoc.get("name"),
+                    )
+                    continue
                 page_batch.append(cdoc)
                 detailed_items.append(cdoc)
 
@@ -399,5 +407,14 @@ def add_aquifer_documents(
         if (total_count is not None and offset >= int(total_count)) or len(items) < limit:
             break
 
-    logger.info("Inserted %d documents into collection '%s'", len(detailed_items), collection)
+    if log_only:
+        logger.info(
+            "Log-only mode: would insert %d documents into collection '%s'",
+            len(detailed_items),
+            collection,
+        )
+    else:
+        logger.info(
+            "Inserted %d documents into collection '%s'", len(detailed_items), collection
+        )
     return None
