@@ -39,11 +39,13 @@ def build_documents(
     chunks: list[dict[str, Any]],
     collection: str,
     doc_id_prefix: str | None = None,
+    source_name: str = "",
 ) -> list[dict[str, Any]]:
     """Convert chunk metadata into servant document payloads.
 
     - collection: target collection name to attach to documents
     - doc_id_prefix: prefix for document IDs (defaults to collection name)
+    - source_name: value for metadata.source (defaults to doc_id if empty)
     """
     prefix = doc_id_prefix or collection
     docs: list[dict[str, Any]] = []
@@ -66,7 +68,7 @@ def build_documents(
             "collection": collection,
             "name": doc_id,
             "text": f"{header}\n\n{text}",
-            "metadata": {"source": doc_id},
+            "metadata": {"source": source_name or doc_id},
         }
         logger.debug(json.dumps(doc, indent=2))
         docs.append(doc)
@@ -79,6 +81,7 @@ def run_usfm_loader(
     *,
     print_only: bool,
     doc_id_prefix: str | None = None,
+    source_name: str = "",
 ) -> None:
     """End-to-end runner for a USFM dataset.
 
@@ -86,6 +89,7 @@ def run_usfm_loader(
     - collection: servant collection to target
     - print_only: when True, prints documents JSON instead of posting
     - doc_id_prefix: prefix for document IDs (defaults to collection name)
+    - source_name: value for metadata.source (defaults to doc_id if empty)
     """
     dataset_dir = ROOT_DIR / "datasets" / dataset_subdir
     files = sorted(glob(str(dataset_dir / "*.usfm")))
@@ -107,7 +111,7 @@ def run_usfm_loader(
     chunks = group_semantic_chunks(verses, include_text=True)
     logger.info("Prepared %d %s chunks", len(chunks), collection.upper())
 
-    documents = build_documents(chunks, collection=collection, doc_id_prefix=doc_id_prefix)
+    documents = build_documents(chunks, collection=collection, doc_id_prefix=doc_id_prefix, source_name=source_name)
     if print_only:
         print(json.dumps(documents, ensure_ascii=False, indent=3))
         return

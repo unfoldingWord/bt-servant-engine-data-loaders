@@ -60,9 +60,10 @@ def post_documents_to_servant(
 
             fail += 1
             logger.error(
-                "POST %s returned %s; body=%s",
+                "POST %s returned %s for doc_id=%s; body=%s",
                 url,
                 resp.status_code,
+                doc.get("document_id", "<unknown>"),
                 getattr(resp, "text", "<no body>"),
             )
             break

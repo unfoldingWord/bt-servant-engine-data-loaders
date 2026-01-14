@@ -57,6 +57,7 @@ def build_tn_document(
     row: dict[str, str],
     collection: str,
     doc_prefix: str = "tn_",
+    source_name: str = "",
 ) -> dict[str, Any]:
     """Transform a TSV row into a servant document payload."""
     ref = row["Reference"]
@@ -74,7 +75,7 @@ def build_tn_document(
         "collection": collection,
         "name": qualified_ref,
         "text": text,
-        "metadata": {"source": qualified_id},
+        "metadata": {"source": source_name or qualified_id},
     }
 
 
@@ -119,6 +120,7 @@ def run_tn_loader(
     *,
     print_only: bool = False,
     doc_prefix: str = "tn_",
+    source_name: str = "",
     log_only: bool = False,
     resume_after_id: str = "",
     delay_between_requests: float = 0.0,
@@ -130,6 +132,7 @@ def run_tn_loader(
         collection: servant collection to target
         print_only: when True, prints documents JSON instead of posting
         doc_prefix: prefix for document IDs (e.g., "tn_" or "ne_tn_")
+        source_name: value for metadata.source (defaults to doc_id if empty)
         log_only: when True, logs what would be posted but doesn't post
         resume_after_id: skip rows up to and including this document ID
         delay_between_requests: seconds to wait between POST requests
@@ -161,7 +164,7 @@ def run_tn_loader(
         logger.info("No rows remaining after resume filter")
         return None
 
-    documents = [build_tn_document(r, collection, doc_prefix) for r in all_rows]
+    documents = [build_tn_document(r, collection, doc_prefix, source_name) for r in all_rows]
     logger.info(
         "Prepared %d tN documents from %d TSV files in %s",
         len(documents),

@@ -38,6 +38,7 @@ def main() -> None:
         print_only=args.print_only,
         log_only=args.log_only,
         doc_prefix="ne_tn_",
+        source_name="nepali_translation_notes",
     )
 
 

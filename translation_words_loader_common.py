@@ -33,6 +33,7 @@ def build_document_from_file(
     path: Path,
     collection: str,
     document_prefix: str = DOCUMENT_ID_PREFIX,
+    source_name: str = "",
 ) -> dict[str, Any]:
     name = path.stem
     document_id = f"{document_prefix}{name}"
@@ -42,7 +43,7 @@ def build_document_from_file(
         "collection": collection,
         "name": name,
         "text": text,
-        "metadata": {"source": document_id},
+        "metadata": {"source": source_name or document_id},
     }
 
 
@@ -52,6 +53,7 @@ def load_translation_words_documents(
     *,
     subfolders: Sequence[str] = DEFAULT_SUBFOLDERS,
     document_prefix: str = DOCUMENT_ID_PREFIX,
+    source_name: str = "",
 ) -> None:
     """Load markdown files and post them to the servant engine."""
     if not config.servant_api_base_url or not config.servant_api_token:
@@ -64,7 +66,7 @@ def load_translation_words_documents(
         return None
 
     documents = [
-        build_document_from_file(path, collection, document_prefix=document_prefix)
+        build_document_from_file(path, collection, document_prefix=document_prefix, source_name=source_name)
         for path in md_files
     ]
     logger.info("Prepared %d tW documents from %s", len(documents), dataset_root)
