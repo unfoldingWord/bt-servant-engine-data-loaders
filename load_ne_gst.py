@@ -27,7 +27,7 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    run_usfm_loader("ne_gst", collection="ne_resources", print_only=args.print_only)
+    run_usfm_loader("ne_gst", collection="ne_resources", print_only=args.print_only, doc_id_prefix="ne_gst")
 
 
 if __name__ == "__main__":

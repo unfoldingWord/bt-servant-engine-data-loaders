@@ -24,9 +24,9 @@ logger = get_logger(__name__)
 ROOT_DIR = Path(__file__).resolve().parent
 
 
-def _format_id(collection: str, book_code: str, s_ch: str, s_vs: str, e_ch: str, e_vs: str) -> str:
+def _format_id(prefix: str, book_code: str, s_ch: str, s_vs: str, e_ch: str, e_vs: str) -> str:
     book = book_code.lower()
-    return f"{collection}_{book}_{s_ch}_{s_vs}-{e_ch}_{e_vs}"
+    return f"{prefix}_{book}_{s_ch}_{s_vs}-{e_ch}_{e_vs}"
 
 
 def _format_range_header(book_code: str, s_ch: str, s_vs: str, e_ch: str, e_vs: str) -> str:
@@ -35,11 +35,17 @@ def _format_range_header(book_code: str, s_ch: str, s_vs: str, e_ch: str, e_vs: 
     return f"{book_code} {s_ch}:{s_vs}-{e_ch}:{e_vs}"
 
 
-def build_documents(chunks: list[dict[str, Any]], collection: str) -> list[dict[str, Any]]:
+def build_documents(
+    chunks: list[dict[str, Any]],
+    collection: str,
+    doc_id_prefix: str | None = None,
+) -> list[dict[str, Any]]:
     """Convert chunk metadata into servant document payloads.
 
     - collection: target collection name to attach to documents
+    - doc_id_prefix: prefix for document IDs (defaults to collection name)
     """
+    prefix = doc_id_prefix or collection
     docs: list[dict[str, Any]] = []
     for ch in chunks:
         start = ch.get("start", {})
@@ -52,7 +58,7 @@ def build_documents(chunks: list[dict[str, Any]], collection: str) -> list[dict[
             book_name = str(start.get("book"))
             rev = {v: k for k, v in USFM_CODE_TO_BOOK.items()}
             code = rev.get(book_name, book_name[:3].upper())
-        doc_id = _format_id(collection, code, s_ch, s_vs, e_ch, e_vs)
+        doc_id = _format_id(prefix, code, s_ch, s_vs, e_ch, e_vs)
         header = _format_range_header(code, s_ch, s_vs, e_ch, e_vs)
         text = ch.get("text", "").strip()
         doc = {
@@ -72,12 +78,14 @@ def run_usfm_loader(
     collection: str,
     *,
     print_only: bool,
+    doc_id_prefix: str | None = None,
 ) -> None:
     """End-to-end runner for a USFM dataset.
 
     - dataset_subdir: directory under ./datasets/ containing .usfm files
     - collection: servant collection to target
     - print_only: when True, prints documents JSON instead of posting
+    - doc_id_prefix: prefix for document IDs (defaults to collection name)
     """
     dataset_dir = ROOT_DIR / "datasets" / dataset_subdir
     files = sorted(glob(str(dataset_dir / "*.usfm")))
@@ -99,7 +107,7 @@ def run_usfm_loader(
     chunks = group_semantic_chunks(verses, include_text=True)
     logger.info("Prepared %d %s chunks", len(chunks), collection.upper())
 
-    documents = build_documents(chunks, collection=collection)
+    documents = build_documents(chunks, collection=collection, doc_id_prefix=doc_id_prefix)
     if print_only:
         print(json.dumps(documents, ensure_ascii=False, indent=3))
         return
