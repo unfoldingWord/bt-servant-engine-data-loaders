@@ -29,7 +29,7 @@ def post_documents_to_servant(
     if not base_url or not token:
         raise RuntimeError("SERVANT_API_BASE_URL and SERVANT_API_TOKEN must be configured")
 
-    url = base_url.rstrip("/") + "/chroma/add-document"
+    url = base_url.rstrip("/") + "/admin/chroma/add-document"
     headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
 
     ok, fail = 0, 0

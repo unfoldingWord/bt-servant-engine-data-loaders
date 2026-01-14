@@ -55,3 +55,6 @@ logs/
 
 # Python version manager
 .python-version
+
+# Claude Code
+.claude/
