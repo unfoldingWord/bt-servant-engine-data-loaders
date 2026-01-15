@@ -1,0 +1,25 @@
+title: "विषयसूची तालिका"
+sections:
+  - title: "अनुवाद एकेडेमीको परिचय"
+    link: ta-intro
+
+  - title: "हामी किन बाइबल अनुवाद गर्छौँ ?"
+    link: translate-why
+
+  - title: "वचन प्रकटीकरण परियोजना"
+    link: uw-intro
+
+  - title: "विश्‍वासको अभिव्यक्ति"
+    link: statement-of-faith
+
+  - title: "अनुवाद मार्गनिर्देशनहरू"
+    link: translation-guidelines
+
+  - title: "खुला अनुमति पत्र"
+    link: open-license
+
+  - title: "गेटवे भाषाहरूको रणनीति"
+    link: gl-strategy
+
+  - title: "उत्तरहरू पत्ता लगाउने"
+    link: finding-answers

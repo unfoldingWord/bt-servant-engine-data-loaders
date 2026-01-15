@@ -1,0 +1,398 @@
+title: "विषयसूची तालिका"
+sections:
+  - title: "परिचय"
+    sections:
+      - title: "अनुवादको निर्देशन पुस्तिकाको परिचय"
+        link: translate-manual
+      - title: "जान्‍नुपर्ने पदावलीहरू"
+        link: translate-terms
+      - title: "अनुवाद भनेको के हो ?"
+        link: translate-whatis
+      - title: "अनुवादको बारेमा थप कुराहरू"
+        link: translate-more
+      - title: "तपाईंको बाइबल अनुवादको उद्देश्य कसरी राख्‍ने?"
+        link: translate-aim
+  - title: "असल अनुवादको परिभाषा"
+    sections:
+      - title: "असल अनुवादका विशेषताहरू"
+        link: guidelines-intro
+        sections:
+          - title: "स्‍पष्‍ट अनुवादहरू बनाउनुहोस्"
+            link: guidelines-clear
+          - title: "स्वभाविक अनुवादहरू बनाउनुहोस्"
+            link: guidelines-natural
+          - title: "ठ्याक्‍कै मिलेका अनुवादहरू बनाउनुहोस्"
+            link: guidelines-accurate
+          - title: "मण्‍डली-अनुमोदित अनुवादहरू बनाउनुहोस्"
+            link: guidelines-church-approved
+          - title: "विश्‍वासयोग्‍य अनुवादहरू बनाउनुहोस्"
+            link: guidelines-faithful
+            sections:
+              - title: "परमेश्‍वरको पुत्र र परमेश्‍वर पिता"
+                link: guidelines-sonofgod
+              - title: "पुत्र र पिताको अनुवाद"
+                link: guidelines-sonofgodprinciples
+          - title: "आधिकारिक अनुवादहरू बनाउनुहोस्"
+            link: guidelines-authoritative
+          - title: "ऐतिहासिक अनुवादहरू बनाउनुहोस्"
+            link: guidelines-historical
+          - title: "समान अनुवादहरू बनाउनुहोस्"
+            link: guidelines-equal
+          - title: "समन्वयमा गरिएका अनुवादहरू बनाउनुहोस्"
+            link: guidelines-collaborative
+          - title: "निरन्तर अगाडि बढिरहने अनुवादहरू बनाउनुहोस्"
+            link: guidelines-ongoing
+  - title: "अर्थमा आधारित अनुवादहरू"
+    sections:
+      - title: "अनुवादको प्रक्रिया"
+        link: translate-process
+        sections:
+          - title: "पाठको अर्थ पत्ता लगाउने"
+            link: translate-discover
+          - title: "अर्थलाई पुनः बताउने"
+            link: translate-retell
+      - title: "संरचना र अर्थ"
+        link: translate-fandm
+        sections:
+          - title: "संचरनाको महत्त्व"
+            link: translate-form
+          - title: "अर्थका तहहरू"
+            link: translate-levels
+      - title: "अक्षरशः गरिएका अनुवादहरू"
+        link: translate-literal
+        sections:
+          - title: "शब्दको लागि शब्दको प्रतिस्थापन"
+            link: translate-wforw
+          - title: "अक्षरशः रहेका अनुवादहरूका समस्याहरू"
+            link: translate-problem
+      - title: "अर्थमा आधारित अनुवाद"
+        link: translate-dynamic
+        sections:
+          - title: "अर्थको लागि अनुवाद गर्नुहोस्"
+            link: translate-tform
+  - title: "अनुवाद गर्नुभन्दा पहिला"
+    sections:
+      - title: "अनुवाद समूहको छनौट"
+        link: choose-team
+        sections:
+          - title: "अनुवादकका दक्षताहरू"
+            link: qualifications
+      - title: "अनुवादको एउटा शैलीको छनोट"
+        link: choose-style
+      - title: "पहिला केको अनुवाद गर्ने भनेर छान्‍ने"
+        link: translation-difficulty
+      - title: "स्रोत खण्‍डको छनोट"
+        link: translate-source-text
+        sections:
+          - title: "प्रतिलिपि अधिकारहरू, अनुमतिपत्रहरू, र स्रोत खण्‍डहरू"
+            link: translate-source-licensing
+          - title: "स्रोत खण्‍डहरू र संस्करण सङ्ख्याहरू"
+            link: translate-source-version
+      - title: "तपाईंको भाषा लेख्नका गर्नुपर्ने लागि निर्णयहरू"
+        link: writing-decisions
+        sections:
+          - title: "वर्णमाला/वर्ण र हिज्जे सम्बन्धि नियम"
+            link: translate-alphabet
+          - title: "वर्णमालाको विकास"
+            link: translate-alphabet2
+      - title: "फाइल ढाँचाहरू"
+        link: file-formats
+  - title: "अनुवाद गर्न कसरी सुरु गर्ने"
+    sections:
+      - title: "पहिलो खेस्रा बनाउने"
+        link: first-draft
+      - title: "अनुवादको लागि सहयोग"
+        link: translate-help
+  - title: "बाइबल खण्‍ड"
+    sections:
+      - title: "मूल र स्रोत भाषाहरू"
+        link: translate-original
+      - title: "मूल पाण्‍डुलिपिहरू"
+        link: translate-manuscripts
+      - title: "बाइबलको संचरना"
+        link: translate-bibleorg
+      - title: "अध्याय र पद सङ्ख्याहरू"
+        link: translate-chapverse
+      - title: "यूएलटी र यूएसटीमा भएका ढाँचाका सङ्केत चिन्हहरू"
+        link: translate-formatsignals
+      - title: "बाइबल अनुवाद गर्दा यूएलटी र यूएसटीलाई कसरी प्रयोग गर्ने"
+        link: translate-useultust
+  - title: "अनुवाद गर्दा अनुवादका सहयोगी सामग्रीहरूलाई प्रयोग गर्नुहोस्"
+    sections:
+      - title: "लिङ्क सहितका टिप्पणीहरू"
+        link: resources-links
+      - title: "अनुवाद टिप्पणीहरूको प्रयोग"
+        link: resources-types
+        sections:
+          - title: "टिप्पणीहरूमा सम्बन्धवाचक अभिव्यक्ती र सामान्य जानकारी"
+            link: resources-connect
+          - title: "परिभाषाहरू सहितका टिप्पणीहरू"
+            link: resources-def
+          - title: "व्याख्या गर्ने टिप्पणीहरू"
+            link: resources-eplain
+          - title: "पर्यायवाची र समानार्थी वाक्यांशहरू सहितका टिप्पणीहरू"
+            link: resources-synequi
+          - title: "वैकल्पिक अनुवाद सहितका टिप्पणीहरू (वैकल्पिक अनुवादः)"
+            link: resources-alter
+          - title: "यूएसटीबाट कसैको भनाइ समावेश गरिएका टिप्पणीहरू"
+            link: resources-clarify
+          - title: "वैकल्पिक अर्थहरू भएका टिप्पणीहरू"
+            link: resources-alterm
+          - title: "सम्भावित अर्थ सहितका टिप्पणीहरू"
+            link: resources-porp
+          - title: "अलङकार पहिचान गर्ने टिप्पणीहरू"
+            link: resources-fofs
+          - title: "प्रत्यक्ष र अप्रत्यक्ष उद्धरणहरूलाई पहिचान गर्ने टिप्पणीहरू"
+            link: resources-iordquote
+          - title: "यूएलटीका लामा वाक्यांशहरूका लागि टिप्पणीहरू"
+            link: resources-long
+          - title: "अनुवाद शब्दहरूको प्रयोग"
+            link: resources-words
+          - title: "अनुवाद प्रश्‍नहरूको प्रयोग"
+            link: resources-questions
+  - title: "उति नै खेर सिक्‍नुपर्ने भागहरू"
+    sections:
+      - title: "अनुवादका विषयहरू"
+        sections:
+          - title: "खण्‍डमा भएका भिन्‍नताहरू"
+            link: translate-textvariants
+          - title: "पदका पुलहरू"
+            link: translate-versebridge
+      - title: "लेखन शैलीहरू (प्रवचन)"
+        sections:
+          - title: "लेखनका प्रकारहरू"
+            link: writing-intro
+          - title: "पृष्‍ठभूमि जानकारी"
+            link: writing-background
+          - title: "कथाको समापन"
+            link: writing-endofstory
+          - title: "काल्पनिक परिस्थितिहरू (प्राक्कल्पना)"
+            link: figs-hypo
+          - title: "नयाँ घटनाको परिचय"
+            link: writing-newevent
+          - title: "नयाँ र पुराना सहभागीहरूको परिचय"
+            link: writing-participants
+          - title: "दृष्‍टान्त"
+            link: figs-parables
+          - title: "कविता"
+            link: writing-poetry
+          - title: "हितोपदेश"
+            link: writing-proverbs
+          - title: "प्रतीकात्मक भाषा"
+            link: writing-symlanguage
+          - title: "साङ्‍केतिक अगमवाणी"
+            link: writing-apocalypticwriting
+      - title: "वाक्यहरू"
+        sections:
+          - title: "वाक्य संरचना"
+            link: figs-sentences
+          - title: "जानकारी संरचना"
+            link: figs-infostructure
+          - title: "वाक्यका प्रकारहरू"
+            link: figs-sentencetypes
+            sections:
+              - title: "कथनहरू - अन्य प्रयोगहरू"
+                link: figs-declarative
+              - title: "आज्ञार्थक - अन्य प्रयोगहरू"
+                link: figs-imperative
+              - title: "विस्मयादि"
+                link: figs-exclamations
+          - title: "जोड्ने शब्दहरू"
+            link: grammar-connect-words-phrases
+            sections:
+              - title: "क्रमिक पदावलीहरू"
+                link: grammar-connect-time-sequential
+              - title: "एकै समयमा आएका पदावलीहरू"
+                link: grammar-connect-time-simultaneous
+              - title: "पृष्‍ठभूमि बताउने पदावलीहरू"
+                link: grammar-connect-time-background
+              - title: "लक्ष्य वा उद्देश्य बोकेका पदावलीहरू"
+                link: grammar-connect-logic-goal
+              - title: "कारण-परिणाम देखाउने पदावलीहरू"
+                link: grammar-connect-logic-result
+              - title: "विपरीतमा रहेका पदावलीहरू"
+                link: grammar-connect-logic-contrast
+              - title: "तथ्यगत अवस्थाहरू"
+                link: grammar-connect-condition-fact
+              - title: "तथ्यसँग विपरीतमा रहेका अवस्थाहरू"
+                link: grammar-connect-condition-contrary
+              - title: "परिकल्‍पित अवस्थाहरू"
+                link: grammar-connect-condition-hypothetical
+              - title: "अपवादमा रहेका पदावलीहरू"
+                link: grammar-connect-exceptions
+      - title: "व्याकरण"
+        sections:
+          - title: "व्याकरणसम्बन्धि विषय"
+            link: figs-grammar
+          - title: "भाववाचक नाम"
+            link: figs-abstractnouns
+          - title: "कर्तृ वाच्य र कर्म वाच्य"
+            link: figs-activepassive
+          - title: "पहिचान गर्ने कुरा अनि जानकारी दिने वा सम्झना गराउने कुराको तुलना"
+            link: figs-distinguish
+          - title: "युगल अकरण"
+            link: figs-doublenegatives
+          - title: "शब्दहरू हटाउने शैली"
+            link: figs-ellipsis
+          - title: "तिमीका रूपहरू"
+            link: figs-you
+          - title: "‘तिमी’का रूपहरू - दोहोरो बहुवचन"
+            link: figs-youdual
+          - title: "'तिमी' का रूपहरू - एकवचन"
+            link: figs-yousingular
+          - title: "नाम प्रयोग भएका आम वाक्यांशहरू"
+            link: figs-genericnoun
+          - title: "जानु र आउनु"
+            link: figs-go
+          - title: "नामिक विशेषणहरू"
+            link: figs-nominaladj
+          - title: "घटनाक्रमहरू"
+            link: figs-events
+          - title: "शब्दवर्ग"
+            link: figs-partsofspeech
+          - title: "स्वामित्व"
+            link: figs-possession
+          - title: "क्रियापदहरू"
+            link: figs-verbs
+          - title: "पुलिङ्गी शब्दहरूले स्त्रीलाई पनि जनाउने अवस्थाहरू"
+            link: figs-gendernotations
+          - title: "शब्द क्रम"
+            sections:
+              - title: "शब्द क्रम"
+                link: figs-order
+              - title: "शब्द क्रम – हिब्रू"
+                link: figs-orderHeb
+              - title: "शब्द क्रम - ग्रीक"
+                link: figs-orderGrk
+      - title: "उद्धरणहरू"
+        sections:
+          - title: "उद्धरण र उद्धरण मार्जिनहरू"
+            link: writing-quotations
+          - title: "प्रत्यक्ष र अप्रत्यक्ष कथनहरू"
+            link: figs-quotations
+          - title: "उद्धरण चिन्हहरू"
+            link: figs-quotemarks
+          - title: "उद्धरणभित्रका उद्धरणहरू"
+            link: figs-quotesinquotes
+      - title: "सर्वनामहरू"
+        sections:
+          - title: "सर्वनामहरू"
+            link: figs-pronouns
+          - title: "प्रथम, दोस्रो वा तेस्रो पुरुष"
+            link: figs-123person
+          - title: "'हामी' को समावेशी र असमावेशी रूप"
+            link: figs-exclusive
+          - title: "'तिमी' का रूपहरू - औपचारिक वा अनौपचारिक"
+            link: figs-youformal
+          - title: "समूहलाई जनाउने एकवचन सर्वनामहरू"
+            link: figs-youcrowd
+          - title: "निजवाचक सर्वनाम"
+            link: figs-rpronouns
+          - title: "सर्वनामहरू - यिनीहरूको प्रयोग कहिले गर्ने"
+            link: writing-pronouns
+      - title: "अज्ञातहरू"
+        sections:
+          - title: "अज्ञातहरूको अनुवाद गर्नुहोस्"
+            link: translate-unknown
+          - title: "शब्दहरूलाई सार्ने वा सापटी लिने"
+            link: translate-transliterate
+          - title: "नाउँहरूको अनुवाद कसरी गर्ने"
+            link: translate-names
+          - title: "ग्रहण गरिएको ज्ञान र अन्तर्निहित जानकारी"
+            link: figs-explicit
+          - title: "कहिले स्‍पष्‍ट जानकारीलाई अन्तर्निहित बनाउने"
+            link: figs-explicitinfo
+          - title: "कहिले जानकारीलाई अन्तर्निहित राख्‍ने"
+            link: figs-extrainfo
+          - title: "बाइबलीय दूरी"
+            link: translate-bdistance
+          - title: "बाइबलीय आयतन"
+            link: translate-bvolume
+          - title: "बाइबलीय तौल"
+            link: translate-bweight
+          - title: "बाइबलीय पैसा"
+            link: translate-bmoney
+          - title: "हिब्रू महिनाहरू"
+            link: translate-hebrewmonths
+          - title: "सङ्ख्याहरू"
+            link: translate-numbers
+          - title: "क्रम सङ्ख्याहरू"
+            link: translate-ordinal
+          - title: "भाग-सङ्ख्याहरू"
+            link: translate-fraction
+          - title: "दशमलब सङ्ख्या"
+            link: translate-decimal
+          - title: "प्रतीकात्मक कार्य"
+            link: translate-symaction
+      - title: "भाषाका अलङ्कारहरू"
+        sections:
+          - title: "भाषाका अलङ्कारहरू"
+            link: figs-intro
+          - title: "सम्बन्ध जनाउने चिन्ह"
+            link: figs-apostrophe
+          - title: "समव्युत्‍पन्‍न शब्द"
+            link: figs-doublet
+          - title: "मृदुभाषी शैली"
+            link: figs-euphemism
+          - title: "दुई शब्दको बिचमा 'र' राखेर एउटै विचार व्यक्त गर्ने अभिव्यञ्‍जना"
+            link: figs-hendiadys
+          - title: "अतिशयोक्ति र सामान्यीकरण"
+            link: figs-hyperbole
+          - title: "वाक्‍पद्धति"
+            link: figs-idiom
+          - title: "व्यङ्‍ग्‍य"
+            link: figs-irony
+          - title: "कुनै भनाइको विपरीतलाई नकारेर उक्त भनाइलाई व्यक्त गर्ने शैली"
+            link: figs-litotes
+          - title: "मेरिज्म"
+            link: figs-merism
+          - title: "अलङ्कार"
+            link: figs-metaphor
+          - title: "लक्षणा"
+            link: figs-metonymy
+          - title: "समान्तरता"
+            link: figs-parallelism
+          - title: "उस्तै अर्थ भएका समानान्तरता"
+            link: figs-synonparallelism
+          - title: "मानवीकरण"
+            link: figs-personification
+          - title: "भविष्यवाणीयुक्त भूत"
+            link: figs-pastforfuture
+          - title: "आलङ्‍कारिक प्रश्‍न"
+            link: figs-rquestion
+          - title: "उपमा"
+            link: figs-simile
+          - title: "उपलक्षण"
+            link: figs-synecdoche
+      - title: "बाइबलीय बिम्बविधान"
+        sections:
+          - title: "बाइबलीय बिम्बविधान"
+            link: biblicalimageryta
+          - title: "बाइबलीय बिम्बविधान - साझा ढाँचाहरू"
+            link: bita-part1
+          - title: "बाइबलीय बिम्बविधान - साझा लक्षणाहरू"
+            link: bita-part2
+          - title: "बाइबलीय बिम्बविधान - सामान्य अलङकारहरू"
+            link: figs-simetaphor
+          - title: "विस्तारित रूपक"
+            link: figs-exmetaphor
+          - title: "बाइबलीय बिम्बविधान - जटिल अलङ्कारहरू"
+            link: figs-cometaphor
+          - title: "बाइबलीय बिम्बविधान – बाइबलमा भएका सामान्य अलङकारहरू"
+            sections:
+              - title: "बाइबलीय बिम्बविधान - शरीरका अङ्‍गहरू र मानवीय गुणहरू"
+                link: bita-hq
+              - title: "बाइबलीय बिम्बविधान - मानवीय व्यवहार"
+                link: bita-humanbehavior
+              - title: "बाइबलीय बिम्बविधान - प्राकृतिक घटनाहरू"
+                link: bita-phenom
+              - title: "बाइबलीय बिम्बविधान - मानव निर्मित वस्तुहरू"
+                link: bita-manmade
+              - title: "बाइबलीय बिम्बविधान - खेती"
+                link: bita-farming
+              - title: "बाइबलीय बिम्बविधान - जनावरहरू"
+                link: bita-animals
+              - title: "बाइबलीय बिम्बविधान - बोटबिरूवाहरू"
+                link: bita-plants
+          - title: "बाइबलीय बिम्बविधान - सांस्कृतिक नमुनाहरू"
+            link: bita-part3

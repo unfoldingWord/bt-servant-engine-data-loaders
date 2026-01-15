@@ -1,0 +1,89 @@
+title: "विषयसूची तालिका"
+sections:
+  - title: "जाँचको परिचय"
+    sections:
+      - title: "अनुवाद जाँचको परिचय"
+        link: intro-checking
+      - title: "जाँच निर्देशन (नियमावली) को परिचय"
+        link: intro-check
+      - title: "जाँचको लक्ष्य्य"
+        link: goal-checking
+      - title: "जाँचको अधिकार र प्रक्रिया"
+        link: authority-process
+  - title: "जाँचको प्रक्रिया"
+    sections:
+      - title: "सहपाठीसँग गरिने मौखिक जाँच"
+        link: peer-check
+      - title: "समूहमा मौखिक रूपमा गरिने ठूलो अंशको जाँच"
+        link: team-oral-chunk-check
+      - title: "शब्द अनुवादको जाँच"
+        link: important-term-check
+      - title: "ट्रान्सलेसन कोरमा अनुवादका टिप्‍पणीहरूको जाँच"
+        link: trans-note-check
+      - title: "भाषा समुदायको जाँच" 
+        sections:
+          - title: "भाषा समुदायको जाँच"
+            link: language-community-check  
+          - title: "अन्य तरिकाहरू"
+            link: other-methods
+          - title: "स्पष्‍ट अनुवाद"
+            link: clear
+          - title: "स्वभाविक अनुवाद"
+            link: natural
+          - title: "स्वीकार्य शैली"
+            link: acceptable
+          - title: "भाषा समुदायका निम्ति मूल्याङ्‍कन प्रश्‍नहरू"
+            link: community-evaluation
+      - title: "मण्डली नेतृत्वद्वारा गरिने जाँच"
+        sections:
+          - title: "मण्डली नेतृत्वद्वारा गरिने जाँच"
+            link: church-leader-check
+          - title: "शुद्धताको जाँच"
+            link: accuracy-check
+      - title: "तह २ पुष्‍टि"
+        link: good
+      - title: "ट्रान्सलेसन कोरमा पङ्क्तिको स्थान मिलाउने"
+        link: alignment-tool
+      - title: "गुणको जाँच गर्नेहरू"
+        sections:
+          - title: "अनुवाद जाँचका चरणहरू"
+            link: vol2-steps 
+          - title: "जाँच गर्नुपर्ने कुराहरूका किसिमहरू"
+            link: vol2-things-to-check
+          - title: "तह तीनको जाँचका निम्ती प्रश्‍नहरू"
+            link: level3-questions
+          - title: "तह ३ को अनुमोदन"
+            link: level3-approval
+      - title: "वापस अनुवाद"
+        link: vol2-backtranslation
+        sections:
+          - title: "वापस अनुवादको उद्देश्य"
+            link: vol2-backtranslation-purpose
+          - title: "वापस अनुवादक"
+            link: vol2-backtranslation-who
+          - title: "वापस अनुवादका किसिमहरू"
+            link: vol2-backtranslation-kinds
+          - title: "वापस अनुवादका प्रकारहरू"
+            link: vol2-backtranslation-written
+          - title: "असल वापस अनुवाद सृजनाको निम्ति मार्गनिर्देशनहरू"
+            link: vol2-backtranslation-guidelines
+  - title: "ढाँचा मिलाउने र प्रकाशन"
+    sections:
+      - title: "ढाँचाको जाँच कसरी गर्ने"
+        link: formatting
+      - title: "उपयुक्त वर्णमाला"
+        link: alphabet
+      - title: "हिज्‍जेको एकरूपता"
+        link: spelling
+      - title: "विराम चिन्हको एकरूपता"
+        link: punctuation
+      - title: "अनुवादको पूर्णता"
+        link: complete
+      - title: "पदहरूको पूर्ण विन्यास"
+        link: verses
+      - title: "खण्डका शीर्षकहरू"
+        link: headings  
+      - title: "प्रकाशन"
+        link: publishing
+      - title: "आफैँले गर्ने जाँचको फाराम"
+        link: self-assessment

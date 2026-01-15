@@ -1,0 +1,65 @@
+intro-publishing:
+  recommended: []
+  dependencies:
+    - prechecking-training
+intro-share:
+  recommended:
+    - share-content
+  dependencies:
+    - intro-publishing
+platforms:
+  recommended:
+    - setup-ts
+    - pretranslation-training
+  dependencies:
+    - process-manual
+    - file-formats
+prechecking-training:
+  recommended:
+    - intro-check
+    - goal-checking
+    - required-checking
+  dependencies:
+    - pretranslation-training
+pretranslation-training:
+  recommended:
+    - choose-team
+    - translate-source-text
+    - translate-alphabet
+    - writing-decisions
+    - translation-difficulty
+  dependencies:
+    - translate-process
+    - translate-why
+process-manual:
+  recommended: []
+  dependencies:
+    - finding-answers
+required-checking:
+  recommended:
+    - intro-publishing
+  dependencies:
+    - prechecking-training
+setup-team:
+  recommended:
+    - choose-team
+    - qualifications
+    - translate-source-text
+    - translate-alphabet
+    - writing-decisions
+    - translation-difficulty
+  dependencies:
+    - translate-process
+setup-ts:
+  recommended: []
+  dependencies:
+    - platforms
+share-content:
+  recommended: []
+  dependencies:
+    - intro-share
+source-text-process:
+  recommended:
+    - intro-share
+  dependencies:
+    - intro-publishing

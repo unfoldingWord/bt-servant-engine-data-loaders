@@ -1,0 +1,41 @@
+title: "विषयसूची तालिका"
+sections:
+  - title: "कदम १: सुरु गर्दै"
+    sections:
+      - title: "प्रक्रिया नियमावलीको परिचय"
+        link: process-manual
+
+  - title: "कदम २: अनुवादको टोलीको स्थापना गर्ने"
+    sections:
+      - title: "अनुवाद समूहको स्थापना"
+        link: setup-team
+
+  - title: "कदम ३: अनुवाद गर्ने"
+    sections:
+      - title: "अनुवाद सुरु गर्नुअघिको तालिम"
+        link: pretranslation-training
+      - title: "मञ्‍च (कार्यक्रम देखाउने स्थान) को छनौट"
+        link: platforms
+      - title: "अनुवाद स्टुडियोको स्थापना"
+        link: setup-ts
+      - title: "अनुवादको अवलोकन"
+        link: translation-overview
+
+  - title: "कदम ४: जाँच"
+    sections:
+      - title: "जाँच सुरु हुनुअघिको तालिम"
+        link: prechecking-training
+      - title: "ट्रान्सलेसन कोरको स्थापना गर्ने"
+        link: setup-tc
+
+  - title: "कदम ५: प्रकाशन"
+    sections:
+      - title: "प्रकाशन परिचय"
+        link: intro-publishing
+
+  - title: "कदम ६: वितरण"
+    sections:
+      - title: "वितरणको परिचय"
+        link: intro-share
+      - title: "सामाग्रीलाई कसरी सेयर गर्ने"
+        link: share-content
